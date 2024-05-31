@@ -1,6 +1,6 @@
-import { Flex, Textarea, Title } from "@mantine/core";
 import { Question, QuestionType } from "./Question";
-import { ShortAnswerEditor } from "../../components/question-editors/short-answer-editor";
+import { ShortAnswerEditView } from "../../components/quiz-components/question-edit/short-answer-edit";
+import { ShortAnswerTestView } from "../../components/quiz-components/question-test/short-answer-test";
 
 
 export class ShortAnswerQuestion extends Question {
@@ -22,27 +22,22 @@ export class ShortAnswerQuestion extends Question {
     setUserInput(input: string): void {
         this.userInput = input;
     }
-    getFormElement(): JSX.Element {
+
+    // Views
+    getEditView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
         return(
-            <Textarea />
+            <ShortAnswerEditView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getEditor(): JSX.Element {
+    getTestView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
         return(
-            <ShortAnswerEditor question={this} />
+            <ShortAnswerTestView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getAnswerElement(): JSX.Element {
+    getReviewView(): JSX.Element {
         return(
-            <Flex
-                direction={{ base: 'row', sm: 'row' }}
-                gap={{ base: 'sm', sm: 'lg' }}
-            >
-                <Title>Correct Answer</Title>
-                <p>{this.correctAnswer}</p>
-                <Title>Your Answer</Title>
-                <p>{this.userInput}</p>
-            </Flex>
+            <p>to be implemented</p>
         );
+        
     }
 }

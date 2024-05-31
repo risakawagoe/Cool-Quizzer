@@ -22,7 +22,7 @@ export function getQuestionTypeLabel(type: QuestionType): string {
 }
 
 export abstract class Question {
-    protected prompt: string = "";
+    protected prompt: string = "";// TODO: can be private? 
     readonly type: QuestionType;
     constructor(type: QuestionType) {
         this.type = type;
@@ -33,25 +33,12 @@ export abstract class Question {
     setPrompt(prompt:string) {
         this.prompt = prompt;
     }
-    getTestingDisplay(): JSX.Element {
-        return this.getDisplayElement(true);
-    }
-    getAnswerDisplay(): JSX.Element {
-        return this.getDisplayElement(false);
-    }
-    getDisplayElement(isTestMode: boolean): JSX.Element {
-        return (
-        <>
-            <p>{this.getPrompt()}</p>
-            {isTestMode ? this.getFormElement() : this.getAnswerElement()}
-        </>
-        )
-    }
 
     abstract setUserInput(input: any): void;
     abstract setAnswers(answers: any): void;
 
-    abstract getEditor(): JSX.Element;
-    abstract getFormElement(): JSX.Element;
-    abstract getAnswerElement(): JSX.Element;
+    abstract getEditView(saveQuestion: (question: Question, index: number) => void, index: number): JSX.Element;
+    abstract getTestView(saveQuestion: (question: Question, index: number) => void, index: number): JSX.Element;
+    abstract getReviewView(): JSX.Element;
 }
+

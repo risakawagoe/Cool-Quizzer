@@ -1,7 +1,5 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { QuizEditor } from './components/quiz-editor';
+import { QuizEditor } from './components/quiz-components/quiz-editor';
 
 function App() {
   return (

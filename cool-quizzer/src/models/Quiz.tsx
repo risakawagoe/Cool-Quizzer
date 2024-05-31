@@ -1,52 +1,63 @@
-import { MultipleChoiceQuestion } from "./questions/MultipleChoiceQuestion";
+import { Divider, Title } from "@mantine/core";
 import { Question } from "./questions/Question";
-import { ShortAnswerQuestion } from "./questions/ShortAnswerQuestion";
 
 export class Quiz implements Iterable<Question> {
-    private questions: Array<Question> = new Array();
-    constructor() {
-        // demo
-        let short = new ShortAnswerQuestion();
-        short.setPrompt("what is your name?");
-        short.setAnswers("Your Name");
-        
-        
-        let mc = new MultipleChoiceQuestion();
-        mc.setPrompt("Which color is the color of a tomato?");
-        mc.setAnswers([
-            {label: "red", isCorrect: true},
-            {label: "blue", isCorrect: false},
-            {label: "green", isCorrect: false}
-        ])
-        this.questions.push(short);
-        this.questions.push(mc);
-    }
+    private questions: Array<Question> = [];
 
-    [Symbol.iterator](): Iterator<Question> {
+    public [Symbol.iterator](): Iterator<Question> {
         return this.questions[Symbol.iterator]();
     }
 
-    public displayElement(): JSX.Element {
-        return(
-            <>
-            {this.questions.map((question, index) => (
-                <div key={index}>
-                    Question {index + 1}
-                    {question.getDisplayElement(true)}
-                </div>
-            ))}
-            </>
-        );
+    public getQuestions(): ReadonlyArray<Question> {
+        return [...this.questions];
     }
+
+    public addQuestion(question: Question): void {
+        this.questions.push(question);
+    }
+
+    public updateQuestion(question: Question, index: number) {
+        if(index >= 0 && index < this.questions.length) {
+            this.questions.splice(index, 1, question);
+        }
+    }
+
     public displayEditors(): JSX.Element {
         return(
             <>
-            {this.questions.map((question, index) => (
-                <div key={index}>
-                    Question {index + 1}
-                    {question.getEditor()}
-                </div>
-            ))}
+                {this.questions.map((question, index) => (
+                    <div key={index}>
+                        <Title fz={20} c="blue" >Question {index + 1}</Title>
+                        {question.getEditView(this.updateQuestion, index)}
+                        <Divider size="lg" mt={12} mb={20} color="blue" />
+                    </div>
+                ))}
+            </>
+        );
+    }
+    public displayTestViews(): JSX.Element {
+        return(
+            <>
+                {this.questions.map((question, index) => (
+                    <div key={index}>
+                        <Title fz={20} c="green" >Question {index + 1}</Title>
+                        {question.getTestView(this.updateQuestion, index)}
+                        <Divider size="lg" mt={12} mb={20} color="green" />
+                    </div>
+                ))}
+            </>
+        );
+    }
+    public displayReviewViews(): JSX.Element {
+        return(
+            <>
+                {this.questions.map((question, index) => (
+                    <div key={index}>
+                        <Title fz={20} c="orange" >Question {index + 1}</Title>
+                        {question.getReviewView()}
+                        <Divider size="lg" mt={12} mb={20} color="orange" />
+                    </div>
+                ))}
             </>
         );
     }

@@ -1,13 +1,13 @@
-import { Group, Radio } from "@mantine/core";
 import { Question, QuestionType } from "./Question";
-import { MultipleChoiceEditor } from "../../components/question-editors/multiple-choice-editor";
+import { MultipleChoiceEditView } from "../../components/quiz-components/question-edit/multiple-choice-edit";
+import { MultipleChoiceTestView } from "../../components/quiz-components/question-test/multiple-choice-test";
 
 interface Option {
     label: string, 
     isCorrect: boolean
 }
 export class MultipleChoiceQuestion extends Question {
-    private options: Array<string> = new Array();
+    private options: Array<string> = [];
     private correctAnswer: number = -1;
     private userInput: number = -1;
 
@@ -16,21 +16,26 @@ export class MultipleChoiceQuestion extends Question {
     }
 
     getOptions(): ReadonlyArray<string> {
-        const immutableOptionsArray: ReadonlyArray<string> = [...this.options];
-        return immutableOptionsArray;
+        return [...this.options];
+    }
+    setOptions(options: Array<string>): void {
+        this.options = [...options];
     }
     getAnswer():number {
         return this.correctAnswer;
     }
-    setAnswers(answers: Array<Option>): void {
-        answers.forEach((option, index) => {
-            this.options.push(option.label);
-            
-            if(option.isCorrect) {
-                this.correctAnswer = index;
-            }
-        })
+    setAnswers(answers: number): void {
+        this.correctAnswer = answers;
     }
+    // setAnswers(answers: Array<Option>): void {
+    //     answers.forEach((option, index) => {
+    //         this.options.push(option.label);
+            
+    //         if(option.isCorrect) {
+    //             this.correctAnswer = index;
+    //         }
+    //     })
+    // }
 
     setUserInput(input: number): void {
         if(this.options.length === 0) {
@@ -46,31 +51,19 @@ export class MultipleChoiceQuestion extends Question {
         return input >= 0 && input < this.options.length;
     }
 
-    getEditor(): JSX.Element {
+    getEditView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
         return(
-            <MultipleChoiceEditor question={this} />
+            <MultipleChoiceEditView question={this} saveQuestion={saveQuestion} />
         );
     }
-
-    getFormElement(): JSX.Element {
-        return (
-            <Radio.Group
-              withAsterisk
-            >
-              <Group>
-                {this.options.map((option, index) => (
-                    <Radio value={index} label={option} />
-                ))}
-                {/* <Radio value="red" label="Red" />
-                <Radio value="blue" label="Blue" />
-                <Radio value="green" label="Green" /> */}
-              </Group>
-            </Radio.Group>
-          );
-    }
-    getAnswerElement(): JSX.Element {
+    getTestView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
         return(
-            <p>Correct answer: {this.correctAnswer + 1}</p>
+            <MultipleChoiceTestView question={this} saveQuestion={saveQuestion} />
+        );
+    }
+    getReviewView(): JSX.Element {
+        return(
+            <p>to be implemented</p>
         );
     }
 }
