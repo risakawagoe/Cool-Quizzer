@@ -37,8 +37,8 @@ export abstract class Question {
     abstract setUserInput(input: any): void;
     abstract setAnswers(answers: any): void;
 
-    abstract getEditView(saveQuestion: (question: Question, index: number) => void, index: number): JSX.Element;
-    abstract getTestView(saveQuestion: (question: Question, index: number) => void, index: number): JSX.Element;
+    abstract getEditView(saveQuestion: (question: Question) => void): JSX.Element;
+    abstract getTestView(saveQuestion: (question: Question) => void): JSX.Element;
     abstract getReviewView(): JSX.Element;
 }
 

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Container, Flex, Group, Select, Stack, Text } from "@mantine/core";
+import { Container,Select, Text } from "@mantine/core";
 import { QUESTION_TYPE_LABEL, Question, QuestionType } from "../../models/questions/Question";
 import { NoAnswerQuestion } from "../../models/questions/NoAnswerQuestion";
 import { MultipleChoiceQuestion } from "../../models/questions/MultipleChoiceQuestion";
@@ -27,10 +27,6 @@ export const NewQuestionEditView: FC<Props> = ({ addQuestion }) => {
         }else {
             setQuestion(null);
         }
-    }
-
-    function saveQuestion(question: Question, index: number) {
-        addQuestion(question)
     }
 
     function createQuestion(type: QuestionType): Question {
@@ -65,7 +61,7 @@ export const NewQuestionEditView: FC<Props> = ({ addQuestion }) => {
                 value={type} 
                 allowDeselect={false}
                 onChange={setType} />
-            {question === null ? <Text>Select a question type.</Text> : question.getEditView(saveQuestion, 0)}
+            {question === null ? <Text>Select a question type.</Text> : question.getEditView(addQuestion)}
         </Container>
     );
 }

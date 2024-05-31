@@ -19,9 +19,9 @@ export const QuestionsList: FC<Props> = ({ questions, openModal, saveQuestion })
                         <Text>{question.getPrompt()}</Text>
                     </Group>
                     <Group gap={8} flex="0 0 max-content">
-                        <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getEditView(saveQuestion, index))} >Edit</Button>
+                        <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getEditView((question) => saveQuestion(question, index)))} >Edit</Button>
                         <Button variant="default" size="xs" radius="xl" onClick={() => {}} >Remove</Button>
-                        <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getTestView(saveQuestion, index))} >Preview</Button>
+                        <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getTestView((question) => saveQuestion(question, index)))} >Preview</Button>
                     </Group>
                 </Flex>
             ))}

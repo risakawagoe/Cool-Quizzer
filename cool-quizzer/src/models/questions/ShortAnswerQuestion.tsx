@@ -24,12 +24,12 @@ export class ShortAnswerQuestion extends Question {
     }
 
     // Views
-    getEditView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getEditView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <ShortAnswerEditView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getTestView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getTestView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <ShortAnswerTestView question={this} saveQuestion={saveQuestion} />
         );

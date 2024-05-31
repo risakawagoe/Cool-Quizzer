@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Flex, Group, Radio, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleChoiceQuestion } from "../../../models/questions/MultipleChoiceQuestion";
-import { Question, getQuestionTypeLabel } from "../../../models/questions/Question";
+import { getQuestionTypeLabel } from "../../../models/questions/Question";
 import { useInputState, useListState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { IconPlus } from "@tabler/icons-react";
@@ -30,7 +30,7 @@ export const MultipleChoiceEditView: QuestionEditor<MultipleChoiceQuestion> = ({
         updatedQuestion.setPrompt(prompt);
         updatedQuestion.setOptions(options);
         updatedQuestion.setAnswers(Number.parseInt(correctAnswer));
-        // saveQuestion(updatedQuestion, );
+        saveQuestion(updatedQuestion);
     }
 
     const removeOption = (index: number) => {

@@ -34,12 +34,12 @@ export class MultipleSelectQuestion extends Question {
         }
     }
 
-    getEditView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getEditView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <MultipleSelectEditView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getTestView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getTestView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <MultipleSelectTestView question={this} saveQuestion={saveQuestion} />
         );

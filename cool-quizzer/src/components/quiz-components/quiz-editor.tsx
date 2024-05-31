@@ -35,11 +35,6 @@ export const QuizEditor: FC = () => {
         mc.setPrompt("Which color is the color of a tomato?");
         mc.setOptions(['red', 'blue', 'green']);
         mc.setAnswers(0);
-        // mc.setAnswers([
-        //     {label: "red", isCorrect: true},
-        //     {label: "blue", isCorrect: false},
-        //     {label: "green", isCorrect: false}
-        // ])
         
         // no asnwer
         let noAns = new NoAnswerQuestion();
@@ -76,6 +71,13 @@ export const QuizEditor: FC = () => {
         setQuiz(quiz);
         close();
     }
+    
+    function updateQuestion(question: Question, index: number) {
+        console.log('updateQuestion() in quiz-editor.tsx')
+        quiz.updateQuestion(question, index);
+        setQuiz(quiz);
+        close();
+    }
 
     return(
         <>
@@ -87,7 +89,7 @@ export const QuizEditor: FC = () => {
                     <Title size="h1">Questions</Title>
                     <Button onClick={() => openModal('New Question', <NewQuestionEditView addQuestion={addQuestion} />)} variant="transparent" rightSection={<IconSquarePlus style={{ width: '100%', height: '100%' }} stroke={1} />}>Add new question</Button>
                 </Group>
-                <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={quiz.updateQuestion} />
+                <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} />
             </Container>
          </>
     );

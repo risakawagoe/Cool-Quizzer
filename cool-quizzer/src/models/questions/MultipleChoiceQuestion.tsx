@@ -51,12 +51,12 @@ export class MultipleChoiceQuestion extends Question {
         return input >= 0 && input < this.options.length;
     }
 
-    getEditView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getEditView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <MultipleChoiceEditView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getTestView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getTestView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <MultipleChoiceTestView question={this} saveQuestion={saveQuestion} />
         );

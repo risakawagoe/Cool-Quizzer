@@ -28,7 +28,7 @@ export class Quiz implements Iterable<Question> {
                 {this.questions.map((question, index) => (
                     <div key={index}>
                         <Title fz={20} c="blue" >Question {index + 1}</Title>
-                        {question.getEditView(this.updateQuestion, index)}
+                        {question.getEditView((question) => this.updateQuestion(question, index))}
                         <Divider size="lg" mt={12} mb={20} color="blue" />
                     </div>
                 ))}
@@ -41,7 +41,7 @@ export class Quiz implements Iterable<Question> {
                 {this.questions.map((question, index) => (
                     <div key={index}>
                         <Title fz={20} c="green" >Question {index + 1}</Title>
-                        {question.getTestView(this.updateQuestion, index)}
+                        {question.getTestView((question) => this.updateQuestion(question, index))}
                         <Divider size="lg" mt={12} mb={20} color="green" />
                     </div>
                 ))}

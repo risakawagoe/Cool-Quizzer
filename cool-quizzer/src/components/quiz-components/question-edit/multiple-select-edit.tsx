@@ -2,12 +2,12 @@ import { ActionIcon, Button, Checkbox, Flex, Group, Stack, Text, TextInput, Text
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { getQuestionTypeLabel } from "../../../models/questions/Question";
 import { MultipleSelectQuestion, Option } from "../../../models/questions/MultipleSelectQuestion";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useInputState, useListState } from "@mantine/hooks";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 
-export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({ question }) => {
+export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({ question, saveQuestion }) => {
     const [prompt, setPrompt] = useInputState(question.getPrompt());
     const [options, optionsHandlers] = useListState<Option>([...question.getOptions()]);
     const [correctAnswer, setCorrectAnswer] = useState<string[]>(() => {
@@ -39,6 +39,7 @@ export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({
         optionsHandlers.append({ label: newOption, isCorrect: false });
         setNewOption('');
     }
+
     const removeOption = (index: number) => {
         optionsHandlers.remove(index)
 
@@ -47,6 +48,18 @@ export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({
             .map(answer => !Number.isNaN(Number.parseInt(answer)) && Number.parseInt(answer) > index ? (Number.parseInt(answer) - 1).toString() : answer);
 
         setCorrectAnswer([...updatedCorrectAnswer]);
+    }
+
+    const updateQuestion = () => {
+        const updatedQuestion: MultipleSelectQuestion = new MultipleSelectQuestion();
+        updatedQuestion.setPrompt(prompt);
+
+        options.forEach((option, index) => {
+            option.isCorrect = correctAnswer.includes(index.toString());
+        })
+
+        updatedQuestion.setAnswers(options);
+        saveQuestion(updatedQuestion);
     }
 
     return(
@@ -79,7 +92,7 @@ export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({
                 placeholder="Type in a new option."
             />
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline">Save</Button>
+                <Button variant="outline" onClick={updateQuestion}>Save</Button>
             </Group>
         </div>
     );

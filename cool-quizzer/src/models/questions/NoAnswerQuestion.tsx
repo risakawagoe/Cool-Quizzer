@@ -14,12 +14,12 @@ export class NoAnswerQuestion extends Question {
     setUserInput(input: any): void {}
 
     // Views
-    getEditView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getEditView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <NoAnswerEditView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getTestView(saveQuestion: (question: Question, index: number) => void): JSX.Element {
+    getTestView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
             <NoAnswerTestView question={this} saveQuestion={saveQuestion} />
         );

@@ -5,8 +5,14 @@ import { useInputState } from "@mantine/hooks";
 import { NoAnswerQuestion } from "../../../models/questions/NoAnswerQuestion";
 
 
-export const NoAnswerEditView: QuestionEditor<NoAnswerQuestion> = ({ question }) => {
+export const NoAnswerEditView: QuestionEditor<NoAnswerQuestion> = ({ question, saveQuestion }) => {
     const [prompt, setPrompt] = useInputState(question.getPrompt());
+
+    const updateQuestion = () => {
+        const updatedQuestion: NoAnswerQuestion = new NoAnswerQuestion();
+        updatedQuestion.setPrompt(prompt);
+        saveQuestion(updatedQuestion);
+    }
 
     return(
         <div>
@@ -18,7 +24,7 @@ export const NoAnswerEditView: QuestionEditor<NoAnswerQuestion> = ({ question })
                 required
                 />
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline">Save</Button>
+                <Button variant="outline" onClick={updateQuestion}>Save</Button>
             </Group>
         </div>
     );

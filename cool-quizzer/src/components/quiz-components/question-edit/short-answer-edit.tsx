@@ -5,9 +5,16 @@ import { Button, Group, Textarea } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 
 
-export const ShortAnswerEditView: QuestionEditor<ShortAnswerQuestion> = ({ question }) => {
+export const ShortAnswerEditView: QuestionEditor<ShortAnswerQuestion> = ({ question, saveQuestion }) => {
     const [prompt, setPrompt] = useInputState(question.getPrompt());
     const [correctAnswer, setCorrectAnswer] = useInputState(question.getAnswer());
+
+    const updateQuestion = () => {
+        const updatedQuestion: ShortAnswerQuestion = new ShortAnswerQuestion();
+        updatedQuestion.setPrompt(prompt);
+        updatedQuestion.setAnswers(correctAnswer);
+        saveQuestion(updatedQuestion);
+    }
 
     return(
         <div>
@@ -25,7 +32,7 @@ export const ShortAnswerEditView: QuestionEditor<ShortAnswerQuestion> = ({ quest
                 required
                 />
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline">Save</Button>
+                <Button variant="outline" onClick={updateQuestion}>Save</Button>
             </Group>
         </div>
     );
