@@ -2,11 +2,23 @@ import { Radio, Stack } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleChoiceQuestion } from "../../../models/questions/MultipleChoiceQuestion";
 import { getQuestionTypeLabel } from "../../../models/questions/Question";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
-export const MultipleChoiceTestView: QuestionEditor<MultipleChoiceQuestion> = ({ question }) => {
-    const [userInput, setUserInput] = useState('-1');
+export const MultipleChoiceTestView: QuestionEditor<MultipleChoiceQuestion> = ({ question, saveQuestion }) => {
+    const [userInput, setUserInput] = useState<string>(question.getUserInput().toString());
+    // const [userInput, setUserInput] = useState('-1');
+
+    useEffect(() => {
+        saveUserInput();
+    }, [userInput])
+
+    function saveUserInput() {
+        const updatedQuestion: MultipleChoiceQuestion = question.cloneQuestion();
+        updatedQuestion.setUserInput(Number.parseInt(userInput));
+        saveQuestion(updatedQuestion);
+    }
+
 
     return(
         <div>
@@ -19,7 +31,7 @@ export const MultipleChoiceTestView: QuestionEditor<MultipleChoiceQuestion> = ({
             >
               <Stack>
                 {question.getOptions().map((option, index) => (
-                    <Radio value={index.toString()} label={option} />
+                    <Radio key={index} value={index.toString()} label={option} />
                 ))}
               </Stack>
             </Radio.Group>

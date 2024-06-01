@@ -22,7 +22,15 @@ export class MultipleSelectQuestion extends Question {
     }
     setAnswers(answers: Array<Option>): void {
         this.options = [...answers];
-        this.userInput = new Array(answers.length).fill(false);
+        this.initializeUserInput();
+    }
+
+    cloneQuestion(): MultipleSelectQuestion {
+        const clone = new MultipleSelectQuestion();
+        clone.setPrompt(this.prompt);
+        clone.setAnswers([...this.options]);
+        clone.setUserInput([...this.userInput]);
+        return clone;
     }
 
     getUserInput(): Array<boolean> {
@@ -32,6 +40,9 @@ export class MultipleSelectQuestion extends Question {
         if(this.options.length === input.length) {
             this.userInput = [...input];
         }
+    }
+    initializeUserInput(): void {
+        this.userInput = new Array(this.options.length).fill(false);
     }
 
     getEditView(saveQuestion: (question: Question) => void): JSX.Element {

@@ -10,8 +10,15 @@ export class NoAnswerQuestion extends Question {
         super(QuestionType.NO_ANSWER);
     }
 
+    cloneQuestion(): NoAnswerQuestion {
+        const clone = new NoAnswerQuestion();
+        clone.setPrompt(this.prompt);
+        return clone;
+    }
+
     setAnswers(answers: any): void {}
     setUserInput(input: any): void {}
+    initializeUserInput(): void {}
 
     // Views
     getEditView(saveQuestion: (question: Question) => void): JSX.Element {

@@ -22,7 +22,7 @@ export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({
     const [newOption, setNewOption] = useInputState('');
 
     const cards = options.map((option, index) => (
-        <Flex gap={8} align="center">
+        <Flex key={index} gap={8} align="center">
             <Checkbox.Card value={index.toString()} key={index} p={12}>
                 <Group wrap="nowrap" align="center">
                     <Checkbox.Indicator variant="outline" radius="lg" color="green" />
@@ -92,7 +92,7 @@ export const MultipleSelectEditView: QuestionEditor<MultipleSelectQuestion> = ({
                 placeholder="Type in a new option."
             />
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline" onClick={updateQuestion}>Save</Button>
+                <Button variant="outline" onClick={updateQuestion} disabled={prompt.trim().length === 0 || options.length === 0}>Save</Button>
             </Group>
         </div>
     );

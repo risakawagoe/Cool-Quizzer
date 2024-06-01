@@ -32,7 +32,7 @@ export const ShortAnswerEditView: QuestionEditor<ShortAnswerQuestion> = ({ quest
                 required
                 />
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline" onClick={updateQuestion}>Save</Button>
+                <Button variant="outline" onClick={updateQuestion} disabled={prompt.trim().length === 0 || correctAnswer.trim().length === 0}>Save</Button>
             </Group>
         </div>
     );

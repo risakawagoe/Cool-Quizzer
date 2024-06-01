@@ -16,11 +16,22 @@ export class ShortAnswerQuestion extends Question {
     setAnswers(answers: string): void {
         this.correctAnswer = answers;
     }
+
+    cloneQuestion(): ShortAnswerQuestion {
+        const clone = new ShortAnswerQuestion();
+        clone.setPrompt(this.prompt);
+        clone.setAnswers(this.correctAnswer);
+        clone.setUserInput(this.userInput);
+        return clone;
+    }
     getUserInput(): string {
         return this.userInput;
     }
     setUserInput(input: string): void {
         this.userInput = input;
+    }
+    initializeUserInput(): void {
+        this.userInput = "";
     }
 
     // Views

@@ -66,17 +66,27 @@ export const QuizEditor: FC = () => {
     }
 
     function addQuestion(question: Question) {
-        console.log('addQuestion() in quiz-editor.tsx')
         quiz.addQuestion(question);
         setQuiz(quiz);
         close();
     }
+
+    function removeQuestion(index: number) {
+        quiz.removeQuestion(index);
+        setQuiz(quiz);
+    }
     
     function updateQuestion(question: Question, index: number) {
-        console.log('updateQuestion() in quiz-editor.tsx')
+        console.log('updateQuestion')
+        saveLiveChanges(question, index);
+        close();
+    }
+    
+    function saveLiveChanges(question: Question, index: number) {
+        console.log('saveLiveChanges')
         quiz.updateQuestion(question, index);
         setQuiz(quiz);
-        close();
+        console.log(quiz)
     }
 
     return(
@@ -89,7 +99,8 @@ export const QuizEditor: FC = () => {
                     <Title size="h1">Questions</Title>
                     <Button onClick={() => openModal('New Question', <NewQuestionEditView addQuestion={addQuestion} />)} variant="transparent" rightSection={<IconSquarePlus style={{ width: '100%', height: '100%' }} stroke={1} />}>Add new question</Button>
                 </Group>
-                <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} />
+                <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} removeQuestion={removeQuestion} saveLiveChanges={saveLiveChanges} />
+                {/* <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} removeQuestion={removeQuestion} saveLiveChanges={saveLiveChanges} /> */}
             </Container>
          </>
     );

@@ -8,12 +8,19 @@ export class Quiz implements Iterable<Question> {
         return this.questions[Symbol.iterator]();
     }
 
+    // public getQuestions(): Array<Question> {
+    //     return this.questions;
+    // }
     public getQuestions(): ReadonlyArray<Question> {
         return [...this.questions];
     }
 
     public addQuestion(question: Question): void {
         this.questions.push(question);
+    }
+
+    public removeQuestion(index: number): void {
+        this.questions.splice(index, 1);
     }
 
     public updateQuestion(question: Question, index: number) {

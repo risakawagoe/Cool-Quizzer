@@ -20,6 +20,7 @@ export class MultipleChoiceQuestion extends Question {
     }
     setOptions(options: Array<string>): void {
         this.options = [...options];
+        this.initializeUserInput();
     }
     getAnswer():number {
         return this.correctAnswer;
@@ -37,14 +38,26 @@ export class MultipleChoiceQuestion extends Question {
     //     })
     // }
 
+    cloneQuestion(): MultipleChoiceQuestion {
+        const clone = new MultipleChoiceQuestion();
+        clone.setPrompt(this.prompt);
+        clone.setOptions([...this.options]);
+        clone.setAnswers(this.correctAnswer);
+        clone.setUserInput(this.userInput);
+        return clone;
+    }
+    getUserInput(): number {
+        return this.userInput;
+    }
     setUserInput(input: number): void {
         if(this.options.length === 0) {
             this.userInput = -1;
         }
 
-        if(this.isValidInput(input)) {
-            this.userInput = input;
-        }
+        this.userInput = this.isValidInput(input) ? input : -1;
+    }
+    initializeUserInput(): void {
+        this.userInput = -1;
     }
 
     isValidInput(input: number): boolean {

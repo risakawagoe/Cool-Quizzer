@@ -24,7 +24,7 @@ export const NoAnswerEditView: QuestionEditor<NoAnswerQuestion> = ({ question, s
                 required
                 />
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline" onClick={updateQuestion}>Save</Button>
+                <Button variant="outline" onClick={updateQuestion} disabled={prompt.trim().length === 0}>Save</Button>
             </Group>
         </div>
     );

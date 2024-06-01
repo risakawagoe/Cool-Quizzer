@@ -86,7 +86,7 @@ export const MultipleChoiceEditView: QuestionEditor<MultipleChoiceQuestion> = ({
             />
 
             <Group justify="flex-end" mt={20}>
-                <Button variant="outline" onClick={updateQuestion}>Save</Button>
+                <Button variant="outline" onClick={updateQuestion} disabled={prompt.trim().length === 0 || options.length === 0}>Save</Button>
             </Group>
         </div>
     );

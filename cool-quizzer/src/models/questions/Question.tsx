@@ -34,8 +34,10 @@ export abstract class Question {
         this.prompt = prompt;
     }
 
+    abstract cloneQuestion(): Question;
     abstract setUserInput(input: any): void;
     abstract setAnswers(answers: any): void;
+    abstract initializeUserInput(): void;
 
     abstract getEditView(saveQuestion: (question: Question) => void): JSX.Element;
     abstract getTestView(saveQuestion: (question: Question) => void): JSX.Element;
