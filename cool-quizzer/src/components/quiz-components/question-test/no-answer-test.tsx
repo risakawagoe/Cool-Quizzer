@@ -1,14 +1,14 @@
 import { QuestionEditor } from "../../../models/QuestionEditor";
-import { getQuestionTypeLabel } from "../../../models/questions/Question";
 import { NoAnswerQuestion } from "../../../models/questions/NoAnswerQuestion";
+import { QuestionPromptTemplate } from "../question-prompt-template";
+import { Notification } from "@mantine/core";
 
 
 export const NoAnswerTestView: QuestionEditor<NoAnswerQuestion> = ({ question }) => {
-
     return(
         <div>
-            <p>[{getQuestionTypeLabel(question.type)}] {question.getPrompt()}</p>
-            <p>No answers expected.</p>
+            <QuestionPromptTemplate prompt={question.getPrompt()} attachment={question.getAttachment()} />
+            <Notification withCloseButton={false} withBorder>No answers expected.</Notification>
         </div>
     );
 }

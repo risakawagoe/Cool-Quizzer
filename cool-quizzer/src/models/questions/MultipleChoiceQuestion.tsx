@@ -1,11 +1,8 @@
 import { Question, QuestionType } from "./Question";
 import { MultipleChoiceEditView } from "../../components/quiz-components/question-edit/multiple-choice-edit";
 import { MultipleChoiceTestView } from "../../components/quiz-components/question-test/multiple-choice-test";
+import { MultipleChoiceReviewView } from "../../components/quiz-components/question-review/multiple-choice-review";
 
-interface Option {
-    label: string, 
-    isCorrect: boolean
-}
 export class MultipleChoiceQuestion extends Question {
     private options: Array<string> = [];
     private correctAnswer: number = -1;
@@ -28,21 +25,25 @@ export class MultipleChoiceQuestion extends Question {
     setAnswers(answers: number): void {
         this.correctAnswer = answers;
     }
-    // setAnswers(answers: Array<Option>): void {
-    //     answers.forEach((option, index) => {
-    //         this.options.push(option.label);
-            
-    //         if(option.isCorrect) {
-    //             this.correctAnswer = index;
-    //         }
-    //     })
-    // }
+
+    getResult(): boolean {
+        return this.userInput === this.correctAnswer;
+    }
+
+    isCorrect(index: number): boolean {
+        return index === this.correctAnswer;
+    }
+    isSelected(index: number): boolean {
+        return index === this.userInput;
+    }
 
     cloneQuestion(): MultipleChoiceQuestion {
         const clone = new MultipleChoiceQuestion();
-        clone.setPrompt(this.prompt);
+        clone.setPrompt(this.getPrompt());
+        clone.setAttachment(this.getAttachment());
         clone.setOptions([...this.options]);
         clone.setAnswers(this.correctAnswer);
+        clone.setExplanation(this.getExplanation());
         clone.setUserInput(this.userInput);
         return clone;
     }
@@ -76,7 +77,7 @@ export class MultipleChoiceQuestion extends Question {
     }
     getReviewView(): JSX.Element {
         return(
-            <p>to be implemented</p>
+            <MultipleChoiceReviewView question={this} saveQuestion={() => {}} />
         );
     }
 }

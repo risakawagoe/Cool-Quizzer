@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Button, Flex, Group, Stack, Text } from "@mantine/core";
+import { Button, Card, Group, Stack, Text, TypographyStylesProvider } from "@mantine/core";
 import { Question } from "../../models/questions/Question";
 import { useListState } from "@mantine/hooks";
 
@@ -15,15 +15,8 @@ export const QuestionsList: FC<Props> = ({ questions, openModal, saveQuestion, r
     const [list, handlers] = useListState<Question>([]);
 
     useEffect(() => {
-        console.log('quiz-list')
-        console.log(questions)
         handlers.setState(questions);
     }, [questions])
-
-    useEffect(() => {
-        console.log('in useEffect()')
-        console.log(list)
-    }, [list])
 
     function removeQuestionAt(index: number) {
         handlers.remove(index);
@@ -32,8 +25,6 @@ export const QuestionsList: FC<Props> = ({ questions, openModal, saveQuestion, r
 
     function updateList(question: Question, index: number) {
         handlers.setItem(index, question);
-        console.log('list')
-        console.log(list)
         saveLiveChanges(question, index);
     }
 
@@ -41,17 +32,20 @@ export const QuestionsList: FC<Props> = ({ questions, openModal, saveQuestion, r
         <Stack>
             {list.length === 0 && <Text size="sm" c="gray">No questions.</Text>}
             {list.map((question: Question, index) => (
-                <Flex key={index} justify="space-between" align="flex-start" gap={12}>
-                    <Group>
-                        <Text>Question {index + 1}</Text>
-                        <Text>{question.getPrompt()}</Text>
+                <Card shadow="sm" withBorder key={index}>
+                    <Group justify="space-between" align="center" mb={12}>
+                        <Text fw={500} size="lg">Question {index + 1}</Text>
+                        <Group gap={8} justify="flex-end">
+                            <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getEditView((question) => saveQuestion(question, index)))} >Edit</Button>
+                            <Button variant="default" size="xs" radius="xl" onClick={() => removeQuestionAt(index)} >Remove</Button>
+                            <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getTestView((question) => updateList(question, index)))} >Test</Button>
+                            <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getReviewView())} >Review</Button>
+                        </Group>
                     </Group>
-                    <Group gap={8} flex="0 0 max-content">
-                        <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getEditView((question) => saveQuestion(question, index)))} >Edit</Button>
-                        <Button variant="default" size="xs" radius="xl" onClick={() => removeQuestionAt(index)} >Remove</Button>
-                        <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getTestView((question) => updateList(question, index)))} >Test</Button>
-                    </Group>
-                </Flex>
+                    <TypographyStylesProvider>
+                        <div dangerouslySetInnerHTML={{ __html: question.getPrompt() }} />
+                    </TypographyStylesProvider>
+                </Card>
             ))}
         </Stack>
     );

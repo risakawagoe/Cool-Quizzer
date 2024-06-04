@@ -1,6 +1,7 @@
 import { Question, QuestionType } from "./Question";
 import { MultipleSelectEditView } from "../../components/quiz-components/question-edit/multiple-select-edit";
 import { MultipleSelectTestView } from "../../components/quiz-components/question-test/multiple-select-test";
+import { MultipleSelectReviewView } from "../../components/quiz-components/question-review/multiple-select-review";
 
 export interface Option {
     label: string, 
@@ -25,12 +26,29 @@ export class MultipleSelectQuestion extends Question {
         this.initializeUserInput();
     }
 
+    isCorrect(index: number): boolean {
+        const option = this.options.at(index);
+        return option ? option.isCorrect : false;
+    }
+    isSelected(index: number): boolean {
+        const selection = this.userInput.at(index);
+        return selection !== undefined ? selection : false;
+    }
+
     cloneQuestion(): MultipleSelectQuestion {
         const clone = new MultipleSelectQuestion();
-        clone.setPrompt(this.prompt);
+        clone.setPrompt(this.getPrompt());
+        clone.setAttachment(this.getAttachment());
         clone.setAnswers([...this.options]);
+        clone.setExplanation(this.getExplanation());
         clone.setUserInput([...this.userInput]);
         return clone;
+    }
+    getResult(): number {
+        const correctAnswers = this.options.filter(option => option.isCorrect).length;
+        const correctSelection: number = this.options.filter((option, index) => this.isSelected(index) && option.isCorrect).length;
+        const incorrectSelection: number = this.options.filter((option, index) => this.isSelected(index) && !option.isCorrect).length;
+        return correctSelection <= incorrectSelection ? 0 : (correctSelection - incorrectSelection) / correctAnswers;
     }
 
     getUserInput(): Array<boolean> {
@@ -57,7 +75,7 @@ export class MultipleSelectQuestion extends Question {
     }
     getReviewView(): JSX.Element {
         return(
-            <p>to be implemented</p>
+            <MultipleSelectReviewView question={this} saveQuestion={() => {}} />
         );
     }
 }

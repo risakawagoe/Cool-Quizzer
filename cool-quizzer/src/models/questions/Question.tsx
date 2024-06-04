@@ -22,16 +22,30 @@ export function getQuestionTypeLabel(type: QuestionType): string {
 }
 
 export abstract class Question {
-    protected prompt: string = "";// TODO: can be private? 
+    private prompt: string = "";
+    private explanation: string = "";
+    private attachment: File | null = null;
     readonly type: QuestionType;
     constructor(type: QuestionType) {
         this.type = type;
     }
+    getExplanation(): string {
+        return this.explanation;
+    }
+    setExplanation(explanation: string): void {
+        this.explanation = explanation;
+    }
     getPrompt(): string {
         return this.prompt;
     }
-    setPrompt(prompt:string) {
+    setPrompt(prompt:string): void {
         this.prompt = prompt;
+    }
+    getAttachment(): File | null {
+        return this.attachment;
+    }
+    setAttachment(attachment: File | null): void {
+        this.attachment = attachment;
     }
 
     abstract cloneQuestion(): Question;

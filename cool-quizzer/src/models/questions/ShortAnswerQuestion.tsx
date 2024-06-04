@@ -1,6 +1,7 @@
 import { Question, QuestionType } from "./Question";
 import { ShortAnswerEditView } from "../../components/quiz-components/question-edit/short-answer-edit";
 import { ShortAnswerTestView } from "../../components/quiz-components/question-test/short-answer-test";
+import { ShortAnswerReviewView } from "../../components/quiz-components/question-review/short-answer-review";
 
 
 export class ShortAnswerQuestion extends Question {
@@ -19,7 +20,9 @@ export class ShortAnswerQuestion extends Question {
 
     cloneQuestion(): ShortAnswerQuestion {
         const clone = new ShortAnswerQuestion();
-        clone.setPrompt(this.prompt);
+        clone.setPrompt(this.getPrompt());
+        clone.setExplanation(this.getExplanation());
+        clone.setAttachment(this.getAttachment());
         clone.setAnswers(this.correctAnswer);
         clone.setUserInput(this.userInput);
         return clone;
@@ -47,7 +50,7 @@ export class ShortAnswerQuestion extends Question {
     }
     getReviewView(): JSX.Element {
         return(
-            <p>to be implemented</p>
+            <ShortAnswerReviewView question={this} saveQuestion={() => {}} />
         );
         
     }

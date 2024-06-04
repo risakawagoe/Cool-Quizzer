@@ -60,7 +60,8 @@ export const NewQuestionEditView: FC<Props> = ({ addQuestion }) => {
                 data={QUESTION_TYPE_LABEL} 
                 value={type} 
                 allowDeselect={false}
-                onChange={setType} />
+                onChange={setType}
+                mb={12} />
             {question === null ? <Text>Select a question type.</Text> : question.getEditView(addQuestion)}
         </Container>
     );

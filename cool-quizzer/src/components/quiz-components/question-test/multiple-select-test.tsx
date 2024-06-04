@@ -1,8 +1,8 @@
 import { Checkbox, Group, Stack, Text } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
-import { getQuestionTypeLabel } from "../../../models/questions/Question";
 import { MultipleSelectQuestion } from "../../../models/questions/MultipleSelectQuestion";
 import { useEffect, useState } from "react";
+import { QuestionPromptTemplate } from "../question-prompt-template";
 
 
 export const MultipleSelectTestView: QuestionEditor<MultipleSelectQuestion> = ({ question, saveQuestion }) => {
@@ -35,14 +35,12 @@ export const MultipleSelectTestView: QuestionEditor<MultipleSelectQuestion> = ({
         const tmp: Array<boolean> = new Array(updatedQuestion.getOptions().length).fill(false);
         userInput.forEach(input => tmp[Number.parseInt(input)] = true)
         updatedQuestion.setUserInput(tmp);
-        console.log('saving user input')
-        console.log(updatedQuestion)
         saveQuestion(updatedQuestion);
     }
 
     return(
         <div>
-            <p>[{getQuestionTypeLabel(question.type)}] {question.getPrompt()}</p>
+            <QuestionPromptTemplate prompt={question.getPrompt()} attachment={question.getAttachment()} />
             <Checkbox.Group
                 value={userInput}
                 onChange={setUserInput}

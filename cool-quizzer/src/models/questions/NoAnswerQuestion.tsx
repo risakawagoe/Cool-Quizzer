@@ -12,7 +12,9 @@ export class NoAnswerQuestion extends Question {
 
     cloneQuestion(): NoAnswerQuestion {
         const clone = new NoAnswerQuestion();
-        clone.setPrompt(this.prompt);
+        clone.setPrompt(this.getPrompt());
+        clone.setExplanation(this.getExplanation());
+        clone.setAttachment(this.getAttachment());
         return clone;
     }
 
@@ -33,8 +35,7 @@ export class NoAnswerQuestion extends Question {
     }
     getReviewView(): JSX.Element {
         return(
-            <p>to be implemented</p>
-            // <NoAnswerReviewView question={this} />
+            <NoAnswerReviewView question={this} saveQuestion={() => {}} />
         );
         
     }

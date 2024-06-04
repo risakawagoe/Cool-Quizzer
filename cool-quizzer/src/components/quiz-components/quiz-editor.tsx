@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { Quiz } from "../../models/Quiz";
-import { Button, Container, Flex, Group, Modal, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { Button, Container, Group, Modal, ScrollArea, Title } from "@mantine/core";
 import { ShortAnswerQuestion } from "../../models/questions/ShortAnswerQuestion";
 import { MultipleChoiceQuestion } from "../../models/questions/MultipleChoiceQuestion";
 import { MultipleSelectQuestion } from "../../models/questions/MultipleSelectQuestion";
@@ -100,7 +100,6 @@ export const QuizEditor: FC = () => {
                     <Button onClick={() => openModal('New Question', <NewQuestionEditView addQuestion={addQuestion} />)} variant="transparent" rightSection={<IconSquarePlus style={{ width: '100%', height: '100%' }} stroke={1} />}>Add new question</Button>
                 </Group>
                 <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} removeQuestion={removeQuestion} saveLiveChanges={saveLiveChanges} />
-                {/* <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} removeQuestion={removeQuestion} saveLiveChanges={saveLiveChanges} /> */}
             </Container>
          </>
     );
