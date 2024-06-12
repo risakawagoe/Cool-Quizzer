@@ -10,6 +10,10 @@ export const ShortAnswerTestView: QuestionEditor<ShortAnswerQuestion> = ({ quest
     const [userInput, setUserInput] = useInputState(question.getUserInput());
 
     useEffect(() => {
+        setUserInput(question.getUserInput());
+    }, [question])
+
+    useEffect(() => {
         saveUserInput();
     }, [userInput])
 
@@ -25,6 +29,7 @@ export const ShortAnswerTestView: QuestionEditor<ShortAnswerQuestion> = ({ quest
             <Textarea 
                 label="Your Answer"
                 value={userInput}
+                autosize
                 onChange={setUserInput}
             />
         </div>

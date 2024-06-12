@@ -1,4 +1,4 @@
-import { ActionIcon, AspectRatio, Button, Checkbox, FileInput, Flex, Group, Image, InputLabel, Overlay, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { ActionIcon, AspectRatio, Button, Checkbox, FileInput, Flex, Group, Image, Overlay, Stack, Text, TextInput } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleSelectQuestion, Option } from "../../../models/questions/MultipleSelectQuestion";
 import { useState } from "react";

@@ -1,71 +1,63 @@
-import { Divider, Title } from "@mantine/core";
 import { Question } from "./questions/Question";
 
-export class Quiz implements Iterable<Question> {
+export interface QuizStats {
+    playCount: number
+    avgScore: number
+    avgTime: number
+    likes: number
+}
+export class QuizOverview {
+    readonly id;
+    readonly title;
+    readonly description;
+    readonly questionCount;
+    readonly stats: QuizStats;
+    constructor(id: string, title: string, description: string, questionCount: number, stats: QuizStats) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.questionCount = questionCount;
+        this.stats = stats;
+    }
+}
+
+export class Quiz {
+    private title: string = "";
+    private description: string = "";
     private questions: Array<Question> = [];
-
-    public [Symbol.iterator](): Iterator<Question> {
-        return this.questions[Symbol.iterator]();
+    private stats: QuizStats = { 
+        playCount: 0,
+        avgScore: 0,
+        avgTime: 0,
+        likes: 0
     }
-
-    // public getQuestions(): Array<Question> {
-    //     return this.questions;
-    // }
-    public getQuestions(): ReadonlyArray<Question> {
-        return [...this.questions];
+    getTitle(): string {
+        return this.title;
     }
-
+    getDescription(): string {
+        return this.description;
+    }
+    setTitle(title: string): void {
+        this.title = title;
+    }
+    setDescription(description: string): void {
+        this.description = description;
+    }
+    public getQuestions(): Array<Question> {
+        return this.questions;
+    }
     public addQuestion(question: Question): void {
         this.questions.push(question);
     }
-
     public removeQuestion(index: number): void {
         this.questions.splice(index, 1);
     }
-
     public updateQuestion(question: Question, index: number) {
         if(index >= 0 && index < this.questions.length) {
             this.questions.splice(index, 1, question);
         }
     }
-
-    public displayEditors(): JSX.Element {
-        return(
-            <>
-                {this.questions.map((question, index) => (
-                    <div key={index}>
-                        <Title fz={20} c="blue" >Question {index + 1}</Title>
-                        {question.getEditView((question) => this.updateQuestion(question, index))}
-                        <Divider size="lg" mt={12} mb={20} color="blue" />
-                    </div>
-                ))}
-            </>
-        );
-    }
-    public displayTestViews(): JSX.Element {
-        return(
-            <>
-                {this.questions.map((question, index) => (
-                    <div key={index}>
-                        <Title fz={20} c="green" >Question {index + 1}</Title>
-                        {question.getTestView((question) => this.updateQuestion(question, index))}
-                        <Divider size="lg" mt={12} mb={20} color="green" />
-                    </div>
-                ))}
-            </>
-        );
-    }
-    public displayReviewViews(): JSX.Element {
-        return(
-            <>
-                {this.questions.map((question, index) => (
-                    <div key={index}>
-                        <Title fz={20} c="orange" >Question {index + 1}</Title>
-                        {question.getReviewView()}
-                        <Divider size="lg" mt={12} mb={20} color="orange" />
-                    </div>
-                ))}
-            </>
-        );
+    public getStats(): QuizStats {
+        return this.stats;
     }
 }

@@ -1,14 +1,14 @@
-import { Card, Checkbox, Group, RingProgress, Stack, Text, TypographyStylesProvider } from "@mantine/core";
-import { QuestionEditor } from "../../../models/QuestionEditor";
+import { Card, Checkbox, Group, RingProgress, Stack, Text } from "@mantine/core";
 import { MultipleSelectQuestion } from "../../../models/questions/MultipleSelectQuestion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getBackgroundColor, getBorderColor, getCheckboxIndicator } from "../../../models/ColorCode";
 import { QuestionPromptTemplate } from "../question-prompt-template";
 import { QuestionExplanationTemplate } from "../question-explanation-template";
 import { getGradingColor } from "../../../controllers/grading-color";
+import { QuestionReviewer } from "../../../models/QuestionReviewer";
 
 
-export const MultipleSelectReviewView: QuestionEditor<MultipleSelectQuestion> = ({ question }) => {
+export const MultipleSelectReviewView: QuestionReviewer<MultipleSelectQuestion> = ({ question }) => {
     const [userInput] = useState<string[]>(() => {
         const tmp: string[] = [];
         question.getUserInput().forEach((selected, index) => {
@@ -18,8 +18,15 @@ export const MultipleSelectReviewView: QuestionEditor<MultipleSelectQuestion> = 
         })
         return tmp;
     });
-    const [percentage] = useState<number>(Number.parseFloat((question.getResult() * 100).toFixed(2)));
+    const [percentage, setPercentage] = useState<number>(0);
 
+    useEffect(() => {
+        async function init() {
+            const score = await question.getScore(true);
+            setPercentage(score * 100);
+        }
+        init();
+    }, [])
 
 
     const cards = question.getOptions().map((option, index) => (
@@ -47,10 +54,10 @@ export const MultipleSelectReviewView: QuestionEditor<MultipleSelectQuestion> = 
                         size={100}
                         thickness={4}
                         roundCaps
-                        label={<Text c={getGradingColor(percentage)} ta="center" size="md" fw={600}>{question.getResult()} / 1</Text>}
+                        label={<Text c={getGradingColor(percentage)} ta="center" size="md" fw={600}>{percentage / 100} / 1</Text>}
                     />
                     <div>
-                        <Text size="md" fw={500}>{percentage / 100} / 1</Text>
+                        <Text size="md" fw={500}>{question.getCorrectSelectionCount()} correct, {question.getIncorrectSelectionCount()} incorrect</Text>
                         <Text c="dimmed" size="xs">Multiple Select Question</Text>
                     </div>
                 </Group>

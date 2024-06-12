@@ -9,6 +9,10 @@ export const MultipleChoiceTestView: QuestionEditor<MultipleChoiceQuestion> = ({
     const [userInput, setUserInput] = useState<string>(question.getUserInput().toString());
 
     useEffect(() => {
+        setUserInput(question.getUserInput().toString());
+    }, [question])
+
+    useEffect(() => {
         saveUserInput();
     }, [userInput])
 

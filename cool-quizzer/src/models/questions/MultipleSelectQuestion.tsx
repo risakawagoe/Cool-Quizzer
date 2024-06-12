@@ -2,6 +2,7 @@ import { Question, QuestionType } from "./Question";
 import { MultipleSelectEditView } from "../../components/quiz-components/question-edit/multiple-select-edit";
 import { MultipleSelectTestView } from "../../components/quiz-components/question-test/multiple-select-test";
 import { MultipleSelectReviewView } from "../../components/quiz-components/question-review/multiple-select-review";
+import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
 
 export interface Option {
     label: string, 
@@ -44,12 +45,19 @@ export class MultipleSelectQuestion extends Question {
         clone.setUserInput([...this.userInput]);
         return clone;
     }
+    getCorrectSelectionCount(): number {
+        return this.options.filter((option, index) => this.isSelected(index) && option.isCorrect).length;
+    }
+    getIncorrectSelectionCount(): number {
+        return this.options.filter((option, index) => this.isSelected(index) && !option.isCorrect).length;
+    }
     getResult(): number {
         const correctAnswers = this.options.filter(option => option.isCorrect).length;
-        const correctSelection: number = this.options.filter((option, index) => this.isSelected(index) && option.isCorrect).length;
-        const incorrectSelection: number = this.options.filter((option, index) => this.isSelected(index) && !option.isCorrect).length;
+        const correctSelection: number = this.getCorrectSelectionCount();
+        const incorrectSelection: number = this.getIncorrectSelectionCount();
         return correctSelection <= incorrectSelection ? 0 : (correctSelection - incorrectSelection) / correctAnswers;
     }
+    
 
     getUserInput(): Array<boolean> {
         return this.userInput;
@@ -62,6 +70,14 @@ export class MultipleSelectQuestion extends Question {
     initializeUserInput(): void {
         this.userInput = new Array(this.options.length).fill(false);
     }
+    calculateScore(): void {
+        const correctAnswers = this.options.filter(option => option.isCorrect).length;
+        const correctSelection: number = this.options.filter((option, index) => this.isSelected(index) && option.isCorrect).length;
+        const incorrectSelection: number = this.options.filter((option, index) => this.isSelected(index) && !option.isCorrect).length;
+        const rawScore = correctSelection <= incorrectSelection ? 0 : (correctSelection - incorrectSelection) / correctAnswers;
+        this.score = Math.round(rawScore * 100) / 100;
+    }
+
 
     getEditView(saveQuestion: (question: Question) => void): JSX.Element {
         return(
@@ -73,9 +89,9 @@ export class MultipleSelectQuestion extends Question {
             <MultipleSelectTestView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getReviewView(): JSX.Element {
+    getReviewView(config: QuizConfig): JSX.Element {
         return(
-            <MultipleSelectReviewView question={this} saveQuestion={() => {}} />
+            <MultipleSelectReviewView config={config} question={this} />
         );
     }
 }

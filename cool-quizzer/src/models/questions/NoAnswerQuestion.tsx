@@ -1,6 +1,7 @@
 import { NoAnswerEditView } from "../../components/quiz-components/question-edit/no-answer-edit";
 import { NoAnswerReviewView } from "../../components/quiz-components/question-review/no-answer-review";
 import { NoAnswerTestView } from "../../components/quiz-components/question-test/no-answer-test";
+import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
 import { Question, QuestionType } from "./Question";
 
 
@@ -21,6 +22,7 @@ export class NoAnswerQuestion extends Question {
     setAnswers(answers: any): void {}
     setUserInput(input: any): void {}
     initializeUserInput(): void {}
+    calculateScore(autoMarking: boolean): void {}
 
     // Views
     getEditView(saveQuestion: (question: Question) => void): JSX.Element {
@@ -33,9 +35,9 @@ export class NoAnswerQuestion extends Question {
             <NoAnswerTestView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getReviewView(): JSX.Element {
+    getReviewView(config: QuizConfig): JSX.Element {
         return(
-            <NoAnswerReviewView question={this} saveQuestion={() => {}} />
+            <NoAnswerReviewView config={config} question={this} />
         );
         
     }

@@ -1,4 +1,4 @@
-import { ActionIcon, AspectRatio, Button, Center, CheckIcon, FileInput, Flex, Group, Image, InputLabel, Overlay, Radio, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { ActionIcon, AspectRatio, Button, CheckIcon, FileInput, Flex, Group, Image, Overlay, Radio, Stack, Text, TextInput } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleChoiceQuestion } from "../../../models/questions/MultipleChoiceQuestion";
 import { useInputState, useListState } from "@mantine/hooks";

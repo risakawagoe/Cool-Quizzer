@@ -1,13 +1,24 @@
 import { Card, Flex, Group, Radio, Stack, Text } from "@mantine/core";
-import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleChoiceQuestion } from "../../../models/questions/MultipleChoiceQuestion";
 import { COLOR_CORRECT, COLOR_INCORRECT, getBackgroundColor, getBorderColor, getRadioIndicator } from "../../../models/ColorCode";
 import { QuestionPromptTemplate } from "../question-prompt-template";
 import { QuestionExplanationTemplate } from "../question-explanation-template";
 import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { QuestionReviewer } from "../../../models/QuestionReviewer";
 
 
-export const MultipleChoiceReviewView: QuestionEditor<MultipleChoiceQuestion> = ({ question }) => {
+export const MultipleChoiceReviewView: QuestionReviewer<MultipleChoiceQuestion> = ({ question }) => {
+    const [isCorrect, setIsCorrect] = useState<boolean>(false);
+
+    useEffect(() => {
+        async function init() {
+            const score = await question.getScore(true);
+            setIsCorrect(score === 1);
+        }
+        init();
+    }, [])
+
     const cards = question.getOptions().map((option, index) => (
         <Flex key={index} gap={8} align="center" >
             <Radio.Card 
@@ -30,9 +41,9 @@ export const MultipleChoiceReviewView: QuestionEditor<MultipleChoiceQuestion> = 
         <div>
             <Card withBorder mb={12}>
                 <Group justify="center">
-                    {question.getResult() ? <IconCircleCheck width={80} height={80} stroke={1} color={COLOR_CORRECT} /> : <IconCircleX width={80} height={80} stroke={1} color={COLOR_INCORRECT} />}
+                    {isCorrect ? <IconCircleCheck width={80} height={80} stroke={1} color={COLOR_CORRECT} /> : <IconCircleX width={80} height={80} stroke={1} color={COLOR_INCORRECT} />}
                     <div>
-                        <Text size="md" fw={500}>{question.getResult() ? '1' : '0'} / 1</Text>
+                        <Text size="md" fw={500}>{isCorrect ? '1' : '0'} / 1</Text>
                         <Text c="dimmed" size="xs">Multiple Choice Question</Text>
                     </div>
                 </Group>

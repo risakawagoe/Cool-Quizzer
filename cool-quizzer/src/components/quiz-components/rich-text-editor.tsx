@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { InputLabel } from '@mantine/core';
+import { FC, useEffect, useState } from 'react';
+import { InputLabel, TypographyStylesProvider } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 
 import { useEditor } from '@tiptap/react';
@@ -42,6 +42,12 @@ interface Props {
 }
 
 export const FieldRichTextEditor: FC<Props> = ({ field, required, content, editable, updateContent }) => {
+    const [currentContent, setCurrentContent] = useState(content);
+
+    useEffect(() => {
+        setCurrentContent(content);
+    }, [content])
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ codeBlock: false }),
@@ -55,7 +61,7 @@ export const FieldRichTextEditor: FC<Props> = ({ field, required, content, edita
     ],
     content,
     onUpdate: ({ editor }) => updateContent(editor.getHTML()),
-    editable: editable
+    editable: editable,
   });
 
   const editableView = (
@@ -110,9 +116,12 @@ export const FieldRichTextEditor: FC<Props> = ({ field, required, content, edita
   );
 
   const displayView = (
-    <RichTextEditor editor={editor} mb={12} w="100%" style={{ border: "none" }} >
-      <RichTextEditor.Content w="100%" p={0} style={{ wordWrap: "break-word", wordBreak: "break-word", overflowWrap: "break-word" }} />
-    </RichTextEditor>
+    <TypographyStylesProvider mb={12} w="100%">
+      <div dangerouslySetInnerHTML={{ __html: currentContent }} style={{ wordWrap: "break-word", wordBreak: "break-word", overflowWrap: "break-word" }}/>
+    </TypographyStylesProvider>
+    // <RichTextEditor editor={editor} mb={12} w="100%" style={{ border: "none" }} >
+    //   <RichTextEditor.Content w="100%" p={0} style={{ wordWrap: "break-word", wordBreak: "break-word", overflowWrap: "break-word" }} />
+    // </RichTextEditor>
   );
 
 

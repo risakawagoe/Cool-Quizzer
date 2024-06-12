@@ -2,6 +2,7 @@ import { Question, QuestionType } from "./Question";
 import { MultipleChoiceEditView } from "../../components/quiz-components/question-edit/multiple-choice-edit";
 import { MultipleChoiceTestView } from "../../components/quiz-components/question-test/multiple-choice-test";
 import { MultipleChoiceReviewView } from "../../components/quiz-components/question-review/multiple-choice-review";
+import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
 
 export class MultipleChoiceQuestion extends Question {
     private options: Array<string> = [];
@@ -60,6 +61,9 @@ export class MultipleChoiceQuestion extends Question {
     initializeUserInput(): void {
         this.userInput = -1;
     }
+    calculateScore(autoMarking: boolean): void {
+        this.score = this.getResult() ? 1 : 0;
+    }
 
     isValidInput(input: number): boolean {
         return input >= 0 && input < this.options.length;
@@ -75,9 +79,9 @@ export class MultipleChoiceQuestion extends Question {
             <MultipleChoiceTestView question={this} saveQuestion={saveQuestion} />
         );
     }
-    getReviewView(): JSX.Element {
+    getReviewView(config: QuizConfig): JSX.Element {
         return(
-            <MultipleChoiceReviewView question={this} saveQuestion={() => {}} />
+            <MultipleChoiceReviewView config={config} question={this} />
         );
     }
 }

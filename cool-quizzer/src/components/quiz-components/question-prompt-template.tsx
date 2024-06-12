@@ -1,5 +1,5 @@
 import { Image } from "@mantine/core"
-import { FC } from "react"
+import { FC, useEffect, useState } from "react"
 import { FieldRichTextEditor } from "./rich-text-editor"
 
 interface Props {
@@ -8,10 +8,17 @@ interface Props {
 }
 
 export const QuestionPromptTemplate: FC<Props> = ({ prompt, attachment }) => {
+    const [_prompt, setPrompt] = useState(prompt);
+    const [_attachment, setAttachment] = useState(attachment);
+
+    useEffect(() => {
+        setPrompt(prompt);
+        setAttachment(attachment);
+    }, [prompt, attachment])
     return (
         <>
-            <FieldRichTextEditor field="" required={false} content={prompt} editable={false} updateContent={() => {}} />
-            {attachment && <Image src={URL.createObjectURL(attachment)} alt={attachment.name} maw="100%" w="auto" h="auto" mb={16} radius="sm" />}
+            <FieldRichTextEditor field="" required={false} content={_prompt} editable={false} updateContent={() => {}} />
+            {_attachment && <Image src={URL.createObjectURL(_attachment)} alt={_attachment.name} maw="100%" w="auto" h="auto" mb={16} radius="sm" />}
         </>
     )
 }

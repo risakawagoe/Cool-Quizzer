@@ -1,6 +1,6 @@
 import { ShortAnswerQuestion } from "../../../models/questions/ShortAnswerQuestion";
 import { QuestionEditor } from "../../../models/QuestionEditor";
-import { ActionIcon, AspectRatio, Button, FileInput, Group, Image, InputLabel, Overlay, Textarea } from "@mantine/core";
+import { ActionIcon, AspectRatio, Button, FileInput, Group, Image, Overlay, Textarea } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { useState } from "react";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
@@ -46,6 +46,7 @@ export const ShortAnswerEditView: QuestionEditor<ShortAnswerQuestion> = ({ quest
                 value={correctAnswer}
                 onChange={setCorrectAnswer}
                 required
+                autosize
                 mb={12}
                 />
             <FieldRichTextEditor field="Explanation" required={false} content={explanation} editable={true} updateContent={setExplanation} />

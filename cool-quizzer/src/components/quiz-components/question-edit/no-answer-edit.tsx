@@ -1,5 +1,5 @@
 import { QuestionEditor } from "../../../models/QuestionEditor";
-import { ActionIcon, AspectRatio, Button, FileInput, Group, Image, InputLabel, Overlay, Textarea } from "@mantine/core";
+import { ActionIcon, AspectRatio, Button, FileInput, Group, Image, Overlay } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { NoAnswerQuestion } from "../../../models/questions/NoAnswerQuestion";
 import { useState } from "react";

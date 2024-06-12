@@ -17,6 +17,16 @@ export const MultipleSelectTestView: QuestionEditor<MultipleSelectQuestion> = ({
     });
 
     useEffect(() => {
+        const tmp: string[] = [];
+        question.getUserInput().forEach((selected, index) => {
+            if(selected) {
+                tmp.push(index.toString());
+            }
+        })
+        setUserInput([...tmp]);
+    }, [question])
+
+    useEffect(() => {
         saveUserInput();
     }, [userInput])
 

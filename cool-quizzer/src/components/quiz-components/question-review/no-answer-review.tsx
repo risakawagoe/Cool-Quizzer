@@ -1,12 +1,12 @@
 import { Card, Group, Text } from "@mantine/core";
-import { QuestionEditor } from "../../../models/QuestionEditor";
 import { NoAnswerQuestion } from "../../../models/questions/NoAnswerQuestion";
 import { QuestionPromptTemplate } from "../question-prompt-template";
 import { QuestionExplanationTemplate } from "../question-explanation-template";
 import { IconCircleOff } from "@tabler/icons-react";
+import { QuestionReviewer } from "../../../models/QuestionReviewer";
 
 
-export const NoAnswerReviewView: QuestionEditor<NoAnswerQuestion> = ({ question }) => {
+export const NoAnswerReviewView: QuestionReviewer<NoAnswerQuestion> = ({ question }) => {
 
     return(
         <div>
@@ -14,7 +14,7 @@ export const NoAnswerReviewView: QuestionEditor<NoAnswerQuestion> = ({ question 
                 <Group justify="center">
                     <IconCircleOff width={80} height={80} stroke={1} color="gray" />
                     <div>
-                        <Text size="md" fw={500}>0 / 0</Text>
+                        <Text size="md" fw={500}>Not for points</Text>
                         <Text c="dimmed" size="xs">No Answer Question</Text>
                     </div>
                 </Group>

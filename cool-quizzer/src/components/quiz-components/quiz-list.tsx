@@ -1,52 +1,81 @@
 import { FC, useEffect } from "react";
-import { Button, Card, Group, Stack, Text, TypographyStylesProvider } from "@mantine/core";
-import { Question } from "../../models/questions/Question";
+import { ActionIcon, Button, Card, Grid, Group, Menu, Stack, Text, Title, TypographyStylesProvider, rem } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
+import { Quiz, QuizOverview } from "../../models/Quiz";
+import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 
 interface Props {
-    questions: Array<Question>
-    openModal: (title: string, element: JSX.Element) => void
-    saveQuestion: (question: Question, index: number) => void
-    removeQuestion: (index: number) => void
-    saveLiveChanges: (question: Question, index: number) => void
+    quizzes: Array<QuizOverview>
+    // updateList: (list: Array<Quiz>) => void
+    // saveQuiz: (quiz: Quiz, index: number) => void
+    // removeQuiz: (index: number) => void
 }
 
-export const QuestionsList: FC<Props> = ({ questions, openModal, saveQuestion, removeQuestion, saveLiveChanges }) => {
-    const [list, handlers] = useListState<Question>([]);
+export const QuizList: FC<Props> = ({ quizzes }) => {
+    const [list, handlers] = useListState<QuizOverview>([]);
 
     useEffect(() => {
-        handlers.setState(questions);
-    }, [questions])
+        handlers.setState(quizzes);
+    }, [quizzes])
 
-    function removeQuestionAt(index: number) {
-        handlers.remove(index);
-        removeQuestion(index);
-    }
+    // function removeQuestionAt(index: number) {
+    //     handlers.remove(index);
+    //     removeQuiz(index);
+    // }
 
-    function updateList(question: Question, index: number) {
-        handlers.setItem(index, question);
-        saveLiveChanges(question, index);
+    // function updateList(question: Question, index: number) {
+    //     handlers.setItem(index, question);
+    // }
+
+    // function customButton(label: string, action: () => void, disabled: boolean) {
+    //     return <Button variant="default" size="xs" radius="xl" onClick={action} disabled={disabled} >{label}</Button>;
+    // }
+
+    const card = (quiz: QuizOverview) => {
+        return(
+            <Card withBorder shadow="sm" radius="md">
+                <Card.Section>
+                    <Text fw={500}>{quiz.title}</Text>
+                    <Text mt="sm" c="dimmed" size="sm">{quiz.description}</Text>
+                </Card.Section>
+                <Card.Section>
+                    <Title>id: {quiz.id}</Title>
+                    <Title>question count: {quiz.questionCount}</Title>
+                    <Title>play count: {quiz.stats.playCount}</Title>
+                    <Title>likes: {quiz.stats.likes}</Title>
+                    <Title>avgScore: {quiz.stats.avgScore}</Title>
+                    <Title>avgTime: {quiz.stats.avgTime}</Title>
+                </Card.Section>
+                <Card.Section>
+                    <Group>
+                        <Button>Play</Button>
+                        <Menu withinPortal position="bottom-end" shadow="sm">
+                            <Menu.Target>
+                            <ActionIcon variant="subtle" color="gray">
+                                <IconDots style={{ width: rem(16), height: rem(16) }} />
+                            </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                            <Menu.Item leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}>
+                                Edit
+                            </Menu.Item>
+                            <Menu.Item
+                                leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+                                color="red"
+                            >
+                                Delete
+                            </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+                    </Group>
+                </Card.Section>
+            </Card>
+        );
     }
 
     return(
-        <Stack>
-            {list.length === 0 && <Text size="sm" c="gray">No questions.</Text>}
-            {list.map((question: Question, index) => (
-                <Card shadow="sm" withBorder key={index}>
-                    <Group justify="space-between" align="center" mb={12}>
-                        <Text fw={500} size="lg">Question {index + 1}</Text>
-                        <Group gap={8} justify="flex-end">
-                            <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getEditView((question) => saveQuestion(question, index)))} >Edit</Button>
-                            <Button variant="default" size="xs" radius="xl" onClick={() => removeQuestionAt(index)} >Remove</Button>
-                            <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getTestView((question) => updateList(question, index)))} >Test</Button>
-                            <Button variant="default" size="xs" radius="xl" onClick={() => openModal(`Question ${index + 1}`, question.getReviewView())} >Review</Button>
-                        </Group>
-                    </Group>
-                    <TypographyStylesProvider>
-                        <div dangerouslySetInnerHTML={{ __html: question.getPrompt() }} />
-                    </TypographyStylesProvider>
-                </Card>
-            ))}
-        </Stack>
+        <Grid>
+            {list.map(quiz => card(quiz))}
+        </Grid>
     );
 }
