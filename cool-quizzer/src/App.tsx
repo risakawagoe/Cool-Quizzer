@@ -1,12 +1,13 @@
-import { Box, Button, Container, Group, Modal, ScrollArea, Title } from '@mantine/core';
+import { Button, Container, Group, Image, Modal, ScrollArea } from '@mantine/core';
 import './App.css';
 import { QuizEditor } from './components/quiz-components/quiz-editor';
 import { QuizList } from './components/quiz-components/quiz-list';
 import { useEffect, useState } from 'react';
 import { useDisclosure, useListState } from '@mantine/hooks';
-import { Quiz, QuizOverview } from './models/Quiz';
-import { createQuiz, deleteQuiz, getAllQuizzes, updateQuiz } from './controllers/quiz-controller';
+import { QuizOverview } from './models/Quiz';
+import { deleteQuiz, getAllQuizzes } from './controllers/quiz-controller';
 import { QuizPlayer } from './components/quiz-components/quiz-player';
+import Logo from "./logo.png";
 
 function App() {
     const [opened, { open, close }] = useDisclosure(false);
@@ -27,6 +28,11 @@ function App() {
 
     function closeEditor() {
         close();
+        setId(undefined);
+        fetchQuizzes();
+    }
+    function closePlayer() {
+        setPlayerModalActive(false);
         setId(undefined);
         fetchQuizzes();
     }
@@ -53,20 +59,22 @@ function App() {
 
     return (
         <>
+            <Group p={32} bg="black">
+                <Image src={Logo} alt="Cool Quizzer Logo" w={160} />
+            </Group>
             <Modal opened={opened} onClose={() => { close(); setId(undefined); }} fullScreen scrollAreaComponent={ScrollArea.Autosize}>
                 <QuizEditor id={id} closeEditor={closeEditor} />
             </Modal>
             <Modal
                 opened={playerModalActive}
-                onClose={() => setPlayerModalActive(false)}
+                onClose={closePlayer}
                 fullScreen
                 radius={0}
                 transitionProps={{ transition: 'fade', duration: 200 }}>
-                    {id && <QuizPlayer id={id} close={() => setPlayerModalActive(false)} />}
+                    {id && <QuizPlayer id={id} close={closePlayer} />}
             </Modal>
             <Container>
-                <Group justify='space-between' mt={32} mb={24}>
-                    <Title fw={400} size="h1">Cool Quizzer</Title>
+                <Group justify='flex-end' mt={32} mb={24}>
                     <Button variant='subtle' onClick={open}>Add new quiz</Button>
                 </Group>
                 <QuizList quizzes={quizzes} playQuiz={playQuiz} editQuiz={editQuiz} deleteQuiz={deleteQuizById} />
