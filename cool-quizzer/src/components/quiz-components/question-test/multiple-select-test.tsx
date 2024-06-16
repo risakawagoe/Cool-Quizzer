@@ -2,7 +2,7 @@ import { Checkbox, Group, Stack, Text } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleSelectQuestion } from "../../../models/questions/MultipleSelectQuestion";
 import { useEffect, useState } from "react";
-import { QuestionPromptTemplate } from "../question-prompt-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 
 
 export const MultipleSelectTestView: QuestionEditor<MultipleSelectQuestion> = ({ question, saveQuestion }) => {

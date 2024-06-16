@@ -25,7 +25,7 @@ export function getQuestionTypeLabel(type: QuestionType): string {
 export abstract class Question {
     private prompt: string = "";
     private explanation: string = "";
-    private attachment: File | null = null;
+    private attachment: File | string | null = null;
     protected marked: boolean = false;
     protected score: number = 0;
     readonly type: QuestionType;
@@ -44,10 +44,10 @@ export abstract class Question {
     setPrompt(prompt:string): void {
         this.prompt = prompt;
     }
-    getAttachment(): File | null {
+    getAttachment(): File | string | null {
         return this.attachment;
     }
-    setAttachment(attachment: File | null): void {
+    setAttachment(attachment: File | string | null): void {
         this.attachment = attachment;
     }
     isMarked() {
@@ -73,7 +73,6 @@ export abstract class Question {
         this.marked = false;
         this.initializeUserInput();
     }
-
     abstract cloneQuestion(): Question;
     abstract setUserInput(input: any): void;
     abstract setAnswers(answers: any): void;
@@ -83,5 +82,15 @@ export abstract class Question {
     abstract getEditView(saveQuestion: (question: Question) => void): JSX.Element;
     abstract getTestView(saveQuestion: (question: Question) => void): JSX.Element;
     abstract getReviewView(config: QuizConfig): JSX.Element;
+
+    abstract getPointsAssigned(autoMarking: boolean): number;
+
+    static deserializable(obj: any): boolean {
+        const validPrompt = obj && "prompt" in obj && typeof obj.prompt === "string";
+        const validExplanation = obj && "explanation" in obj && typeof obj.explanation === "string";
+        const validAttachment = obj && "attachment" in obj && (typeof obj.attachment === "string" || typeof obj.attachment === null);
+        return validPrompt && validExplanation && validAttachment;
+    }
+    abstract getSerializableObject(): any;
 }
 

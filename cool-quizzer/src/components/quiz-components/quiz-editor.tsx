@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { Quiz } from "../../models/Quiz";
-import { Button, Container, Group, Modal, ScrollArea, TextInput, Textarea, Title } from "@mantine/core";
+import { Button, Container, Group, LoadingOverlay, Modal, ScrollArea, TextInput, Textarea, Title } from "@mantine/core";
 import { ShortAnswerQuestion } from "../../models/questions/ShortAnswerQuestion";
 import { MultipleChoiceQuestion } from "../../models/questions/MultipleChoiceQuestion";
 import { MultipleSelectQuestion } from "../../models/questions/MultipleSelectQuestion";
@@ -10,29 +10,30 @@ import { useDisclosure, useInputState } from "@mantine/hooks";
 import { NoAnswerQuestion } from "../../models/questions/NoAnswerQuestion";
 import { NewQuestionEditView } from "./new-question-edit-view";
 import { Question } from "../../models/questions/Question";
-import { QuizPlayer } from "./quiz-player";
+// import { QuizPlayer } from "./quiz-player";
+import { createQuiz, getQuiz, updateQuiz } from "../../controllers/quiz-controller";
 
 interface Props {
     id: string | undefined
-    saveQuiz: (id: string | undefined, quiz: Quiz) => void
+    // saveQuiz: (quiz: Quiz) => void
+    closeEditor: () => void
 }
 
-export const QuizEditor: FC<Props> = ({ id, saveQuiz }) => {
+export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
     const [opened, { open, close }] = useDisclosure(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalElement, setModalElement] = useState(<></>);
     const [quiz, setQuiz] = useState(new Quiz());
 
-    const [title, setTitle] = useInputState(quiz.getTitle());
-    const [description, setDescription] = useInputState(quiz.getDescription());
-
-    const [playerModalActive, setPlayerModalActive] = useState(false);
+    const [title, setTitle] = useInputState('');
+    const [description, setDescription] = useInputState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        console.log('id: ')
-        console.log(id)
-        // id === undefined: new quiz
-        // else: load full quiz data from database
+        fetchQuiz();
+    }, [])
+
+    function loadDemo() {
         const demoQuiz = new Quiz();
 
         // short asnwer
@@ -128,7 +129,29 @@ export const QuizEditor: FC<Props> = ({ id, saveQuiz }) => {
         demoQuiz.addQuestion(demo_mc9);
 
         setQuiz(demoQuiz);
-    }, [])
+    }
+
+    useEffect(() => {
+        setTitle(quiz.getTitle());
+        setDescription(quiz.getDescription());
+    }, [quiz]);
+
+    
+    async function fetchQuiz() {
+        if(id) {
+            setLoading(true);
+            const result = await getQuiz(id);
+            const data = result.data;
+            if(result.success && data) {
+                setQuiz(data);
+                // questionsHandlers.setState(data.getQuestions());
+            }else {
+                alert('Sorry.. Something went wrong, please try again later.');
+                close();
+            }
+            setLoading(false);
+        }
+    }
 
 
 
@@ -170,23 +193,31 @@ export const QuizEditor: FC<Props> = ({ id, saveQuiz }) => {
         setQuiz(quiz);
     }
 
-    function saveChanges() {
+    async function saveQuiz() {
+        console.log('saveing!')
+        setLoading(true);
         updateTitle(title);
         updateDescription(description);
+
+        const result = id ? await updateQuiz(id, quiz) : await createQuiz(quiz);
+        setLoading(false);
+        if(result.success) {
+            closeEditor();
+        }else {
+            alert('Sorry.. Something went wrong, Please try again later.');
+        }
     }
 
     return(
         <>
+            <LoadingOverlay
+                visible={loading}
+                zIndex={1000}
+                overlayProps={{ radius: 'sm', blur: 2 }}
+                loaderProps={{ color: 'pink', type: 'bars' }}
+            />
             <Modal opened={opened} onClose={close} size="xl" scrollAreaComponent={ScrollArea.Autosize} title={modalTitle}>
                 {modalElement}
-            </Modal>
-            <Modal
-                opened={playerModalActive}
-                onClose={() => setPlayerModalActive(false)}
-                fullScreen
-                radius={0}
-                transitionProps={{ transition: 'fade', duration: 200 }}>
-                <QuizPlayer quiz={quiz} saveLiveChanges={saveLiveChanges} close={() => setPlayerModalActive(false)} />
             </Modal>
             <Container mb={20}>
                 <Title size="h1" fw={400} mt={20} mb={12} c="blue">Quiz Editor</Title>
@@ -210,10 +241,9 @@ export const QuizEditor: FC<Props> = ({ id, saveQuiz }) => {
                 </Group>
                 <QuestionsList questions={[...quiz.getQuestions()]} openModal={openModal} saveQuestion={updateQuestion} removeQuestion={removeQuestion} saveLiveChanges={saveLiveChanges} />
             </Container>
-            <Container p={16}>
-                <Button variant="outline" onClick={saveChanges}>Save Quiz</Button>
-                <Button variant="outline" onClick={() => setPlayerModalActive(true)}>Preview Play</Button>
-            </Container>
+            <Group p={16} justify="flex-end">
+                <Button variant="outline" onClick={saveQuiz}>Save Quiz</Button>
+            </Group>
          </>
     );
 }

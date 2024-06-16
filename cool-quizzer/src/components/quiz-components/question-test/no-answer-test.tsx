@@ -1,6 +1,6 @@
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { NoAnswerQuestion } from "../../../models/questions/NoAnswerQuestion";
-import { QuestionPromptTemplate } from "../question-prompt-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 import { Notification } from "@mantine/core";
 
 

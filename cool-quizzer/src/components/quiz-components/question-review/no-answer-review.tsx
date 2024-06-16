@@ -1,7 +1,7 @@
 import { Card, Group, Text } from "@mantine/core";
 import { NoAnswerQuestion } from "../../../models/questions/NoAnswerQuestion";
-import { QuestionPromptTemplate } from "../question-prompt-template";
-import { QuestionExplanationTemplate } from "../question-explanation-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
+import { QuestionExplanationTemplate } from "../templates/question-explanation-template";
 import { IconCircleOff } from "@tabler/icons-react";
 import { QuestionReviewer } from "../../../models/QuestionReviewer";
 

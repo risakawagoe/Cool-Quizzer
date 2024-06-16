@@ -57,7 +57,7 @@ export const PlayerConfigScreen: FC<Props> = ({ config, meta, start }) => {
         </Group>
     ))
 
-    const avgTimeInMinutes = Math.round(meta.stats.avgTime / 60);
+    const avgTimeInMinutes = Math.ceil(meta.stats.avgTime / 60);
 
     const statsRing = (
         <Card withBorder p="lg" radius="md" mt={20} w="100%" className="quiz-stats-ring">

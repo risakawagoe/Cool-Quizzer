@@ -1,29 +1,25 @@
-import { Accordion, Box, Button, Card, Group, NumberFormatter, RingProgress, Text } from "@mantine/core";
+import { Accordion, ActionIcon, Box, Button, Card, Group, NumberFormatter, RingProgress, Text } from "@mantine/core";
 import { FC, useState } from "react";
 import { Question, QuestionType, getQuestionTypeLabel } from "../../../models/questions/Question";
-import { IconArrowsMaximize, IconArrowsMinimize, IconLogout, IconRotateClockwise } from "@tabler/icons-react";
+import { IconArrowsMaximize, IconArrowsMinimize, IconHeart, IconHeartFilled, IconLogout, IconRotateClockwise } from "@tabler/icons-react";
 import { QuizConfig } from "./player-config-screen";
 import { getGradingColor } from "../../../controllers/grading-color";
 
 interface Props {
     config: QuizConfig
     questions: Array<Question>
-    totalScore: number
+    score: { earned: number, max: number }
+    liked: boolean
+    toggleLiked: () => void
     restart: () => void
     exit: () => void
     time: { 'total': number, 'hours': number, 'minutes': number, 'seconds': number }
 }
 
-export const PlayerResultScreen: FC<Props> = ({ config, questions, totalScore, restart, exit, time }) => {
+export const PlayerResultScreen: FC<Props> = ({ config, questions, score, liked, toggleLiked, restart, exit, time }) => {
     const [items, setItems] = useState<string[]>([]);
-    function getPercentage() {
-        return Math.round((totalScore / getMaxPoints()) * 100);
-    }
-    function getMaxPoints() {
-        return questions
-            .map(question => getPointsAssigned(question.type))
-            .reduce((accumulator, current) => accumulator + current, 0);
-    }
+    const percentage = score.max > 0 ? Math.round((score.earned / score.max) * 100) : 0;
+
     function expandAllAccordion() {
         const allItems = new Array(questions.length).fill('').map((_, i) => i.toString());
         setItems([...allItems]);
@@ -31,11 +27,7 @@ export const PlayerResultScreen: FC<Props> = ({ config, questions, totalScore, r
     function collapseAllAccordion() {
         setItems([]);
     }
-    function getPointsAssigned(type: QuestionType): number {
-        const isNoAnswerQuestion = type === QuestionType.NO_ANSWER;
-        const isNonmarkedShortAnswerQuestion = type === QuestionType.SHORT_ANSWER && !config.autoMarking;
-        return isNoAnswerQuestion || isNonmarkedShortAnswerQuestion ? 0 : 1;
-    }
+    
     function formatTime(data: number) {
         return data.toString().padStart(2, '0');
     }
@@ -44,16 +36,16 @@ export const PlayerResultScreen: FC<Props> = ({ config, questions, totalScore, r
             <Card withBorder mb={24} pt={24} pb={24}>
                 <Group justify="center" gap={28}>
                     <RingProgress
-                        sections={[{ value: getPercentage(), color: getGradingColor(getPercentage()) }]}
+                        sections={[{ value: percentage, color: score.max > 0 ? getGradingColor(percentage) : "gray" }]}
                         size={100}
                         thickness={4}
                         roundCaps
-                        label={<Text c={getGradingColor(getPercentage())} ta="center" size="md" fw={600}><NumberFormatter value={(totalScore / getMaxPoints()) * 100} decimalScale={2} suffix="%" /></Text>}
+                        label={<Text c={score.max > 0 ? getGradingColor(percentage) : "gray"} ta="center" size="md" fw={600}><NumberFormatter value={percentage} decimalScale={2} suffix="%" /></Text>}
                     />
                     <Group gap={24} align="flex-start">
                         <div>
                             <Text size="md" fw={500}>Total Score</Text>
-                            <Text c="dimmed" size="xs">{totalScore} / {getMaxPoints()}</Text>
+                            <Text c="dimmed" size="xs">{score.earned} / {score.max}</Text>
                             <Text size="md" fw={500} mt={4}>Time</Text>
                             <Text c="dimmed" size="xs">{formatTime(time.hours)}:{formatTime(time.minutes)}:{formatTime(time.seconds)}</Text>
                         </div>
@@ -84,6 +76,11 @@ export const PlayerResultScreen: FC<Props> = ({ config, questions, totalScore, r
                     </Button>
                 </Group>
                 <Group justify="flex-end" gap={12}>
+                    <ActionIcon radius="xl" color="pink" variant="subtle" size="lg" aria-label="Like">
+                        {liked ? 
+                        <IconHeartFilled style={{ width: "1rem", height: "1rem" }} stroke={1.5} onClick={toggleLiked} />:
+                        <IconHeart style={{ width: "1rem", height: "1rem" }} stroke={1.5} onClick={toggleLiked} />}
+                    </ActionIcon>
                     <Button 
                         variant="subtle" 
                         color="green" 
@@ -106,7 +103,7 @@ export const PlayerResultScreen: FC<Props> = ({ config, questions, totalScore, r
                         <Accordion.Control>
                             <Group justify="space-between" align="center" mr={12}>
                                 <Box>Question {index + 1}  <Text size="sm" c="dimmed">{getQuestionTypeLabel(question.type)}</Text></Box>
-                                <Text size="sm" c="dimmed">{question.getPrecalculatedScore()} / {getPointsAssigned(question.type)}</Text>
+                                <Text size="sm" c="dimmed">{question.getPrecalculatedScore()} / {question.getPointsAssigned(config.autoMarking)}</Text>
                             </Group>
                         </Accordion.Control>
                         <Accordion.Panel>{question.getReviewView(config)}</Accordion.Panel>

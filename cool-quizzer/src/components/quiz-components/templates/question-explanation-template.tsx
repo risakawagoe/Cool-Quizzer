@@ -1,5 +1,5 @@
 import { FC } from "react"
-import { FieldRichTextEditor } from "./rich-text-editor"
+import { FieldRichTextEditor } from "../rich-text-editor"
 
 interface Props {
     explanation: string
