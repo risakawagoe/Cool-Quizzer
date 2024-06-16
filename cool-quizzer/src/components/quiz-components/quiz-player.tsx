@@ -1,34 +1,54 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Box, Button, Group, LoadingOverlay, Text, Title } from "@mantine/core";
-import { Question } from "../../models/questions/Question";
-import { Quiz } from "../../models/Quiz";
+import { Question, QuestionType } from "../../models/questions/Question";
+import { Quiz, QuizStats } from "../../models/Quiz";
 import { useInterval, useListState } from "@mantine/hooks";
 import { PlayerConfigScreen, QuizConfig } from "./quiz-player/player-config-screen";
 import { PlayerRunningScreen } from "./quiz-player/player-running-screen";
 import { PlayerResultScreen } from "./quiz-player/player-result-screen";
+import { getQuiz, updateQuizStats } from "../../controllers/quiz-controller";
 
 interface Props {
-    quiz: Quiz
-    saveLiveChanges: (question: Question, index: number) => void
+    id: string
     close: () => void
 }
 
-export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
+export const QuizPlayer: FC<Props> = ({ id, close }) => {
     const enum Screen {
         CONFIG, RUNNING, RESULT
     }
+    const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [screen, setScreen] = useState(Screen.CONFIG);
     const [loading, setLoading] = useState(false);
     const [config, setConfig] = useState<QuizConfig>({ shuffle: false, autoMarking: false, instantMarking: false });
     const [index, setIndex] = useState(0);
-    const [questions, questionsHandlers] = useListState(quiz.getQuestions());
-    const [totalScore, setTotalScore] = useState(0);
+    const [questions, questionsHandlers] = useListState<Question>([]);
+    const [score, setScore] = useState({ earned: 0, max: 0 });
+    const [liked, setLiked] = useState(false);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const interval = useInterval(() => setElapsedSeconds((s) => s + 1), 1000);
 
     const buttonNext: JSX.Element = <Button onClick={goToNextQuestion} variant="default">Next</Button>;
     const buttonCheckAnswer: JSX.Element = <Button variant="outline" onClick={markCurrentQuestion}>Check Answer</Button>;
     const buttonSubmit: JSX.Element = <Button variant="outline" onClick={submitQuiz}>Submit</Button>;
+
+    useEffect(() => {
+        fetchQuiz();
+    }, []);
+    
+    async function fetchQuiz() {
+        setLoading(true);
+        const result = await getQuiz(id);
+        const data = result.data;
+        if(result.success && data) {
+            setQuiz(data);
+            questionsHandlers.setState(data.getQuestions());
+        }else {
+            alert('Sorry.. Something went wrong, please try again later.');
+            close();
+        }
+        setLoading(false);
+    }
 
     function playerControlElements(): JSX.Element {
         const timer = getTimeElapsed();
@@ -78,6 +98,7 @@ export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
         }
     }
     function goToNextQuestion() {
+        if(!quiz) return;
         if(index < quiz.getQuestions().length - 1) {
             setIndex(index + 1);
         }
@@ -102,7 +123,7 @@ export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
     }
     function resetPlayerState() {
         setIndex(0);
-        setTotalScore(0);
+        setScore({ earned: 0, max: getMaxScore()});
         interval.stop();
         setScreen(Screen.CONFIG);
     }
@@ -110,15 +131,44 @@ export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
         resetQuestionsState();
         close();
     }
+    function getMaxScore() {
+        return questions
+            .map(question => getPointsAssigned(question.type))
+            .reduce((accumulator, current) => accumulator + current, 0);
+    }
+    function getPointsAssigned(type: QuestionType): number {
+        const isNoAnswerQuestion = type === QuestionType.NO_ANSWER;
+        const isNonmarkedShortAnswerQuestion = type === QuestionType.SHORT_ANSWER && !config.autoMarking;
+        return isNoAnswerQuestion || isNonmarkedShortAnswerQuestion ? 0 : 1;
+    }
     async function submitQuiz() {
         interval.stop();
         setLoading(true);
         const marking: Array<Promise<number>> = [];
         questions.forEach(question => marking.push(question.mark(config.autoMarking)));
-        const scores = await Promise.all(marking);
-        setTotalScore(scores.reduce((accumulator, score) => accumulator + score, 0));
+        const individualScores = await Promise.all(marking);
 
-        // send data to backend to update stats (score, time, play-count)
+        const earnedScore = individualScores.reduce((accumulator, score) => accumulator + score, 0);
+        const maxScore = getMaxScore();
+        setScore({ earned: earnedScore, max: maxScore});
+
+        if(quiz) {
+            const oldStats = quiz.getStats();
+            
+            const newPlayCount = oldStats.playCount + 1;
+            const newAvgScore = maxScore > 0 ? 
+                Math.round(((oldStats.avgScore * oldStats.playCount) + ((earnedScore / maxScore) * 100)) / newPlayCount) :
+                 oldStats.avgScore;
+            const newAvgTime = Math.round(((oldStats.avgTime * oldStats.playCount) + elapsedSeconds) / newPlayCount);
+            const updatedStats = {
+                playCount: newPlayCount,
+                avgScore: newAvgScore,
+                avgTime: newAvgTime,
+                likes: oldStats.likes
+            };
+
+            await updateStats(id, updatedStats);
+        }
 
         setScreen(Screen.RESULT);
         setLoading(false);
@@ -136,6 +186,28 @@ export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
             'seconds': seconds
         };
     }
+    async function toggleLiked() {
+        if(quiz) {
+            const oldStats = quiz.getStats();
+            const updatedLikes = liked ? oldStats.likes - 1 : oldStats.likes + 1;
+            const updatedStats = {
+                playCount: oldStats.playCount,
+                avgScore: oldStats.avgScore,
+                avgTime: oldStats.avgTime,
+                likes: updatedLikes
+            };
+            await updateStats(id, updatedStats);
+            setLiked(!liked);
+        }
+    }
+    async function updateStats(id: string, stats: QuizStats) {
+        if(quiz) {
+            await updateQuizStats(id, stats);
+            const tmp = quiz.clone();
+            tmp.setStats(stats);
+            setQuiz(tmp);
+        }
+    }
 
 
     return(
@@ -146,6 +218,7 @@ export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
                 overlayProps={{ radius: 'sm', blur: 2 }}
                 loaderProps={{ color: 'pink', type: 'bars' }}
             />
+            {quiz &&
             <Box maw={920} ml="auto" mr="auto">
                 <Title size="lg" fw={500} mb={12}>{quiz.getTitle()}</Title>
                 <Text c="dimmed" mb={20}>{quiz.getDescription()}</Text>
@@ -171,8 +244,9 @@ export const QuizPlayer: FC<Props> = ({ quiz, close }) => {
                             saveQuestion={saveQuestion} />
                         {playerControlElements()}
                     </>}
-                {screen === Screen.RESULT && <PlayerResultScreen config={config} questions={questions} totalScore={totalScore} restart={restartQuiz} exit={exitQuiz} time={getTimeElapsed()} />}
+                {screen === Screen.RESULT && <PlayerResultScreen config={config} questions={questions} score={score} liked={liked} toggleLiked={toggleLiked} restart={restartQuiz} exit={exitQuiz} time={getTimeElapsed()} />}
             </Box>
+            }
         </Box>
     );
 }

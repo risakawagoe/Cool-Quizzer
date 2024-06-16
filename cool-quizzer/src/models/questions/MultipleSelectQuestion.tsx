@@ -3,6 +3,7 @@ import { MultipleSelectEditView } from "../../components/quiz-components/questio
 import { MultipleSelectTestView } from "../../components/quiz-components/question-test/multiple-select-test";
 import { MultipleSelectReviewView } from "../../components/quiz-components/question-review/multiple-select-review";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
+import { uploadFile } from "../../controllers/file-upload-controller";
 
 export interface Option {
     label: string, 
@@ -40,8 +41,8 @@ export class MultipleSelectQuestion extends Question {
         const clone = new MultipleSelectQuestion();
         clone.setPrompt(this.getPrompt());
         clone.setAttachment(this.getAttachment());
-        clone.setAnswers([...this.options]);
         clone.setExplanation(this.getExplanation());
+        clone.setAnswers([...this.options]);
         clone.setUserInput([...this.userInput]);
         return clone;
     }
@@ -93,5 +94,63 @@ export class MultipleSelectQuestion extends Question {
         return(
             <MultipleSelectReviewView config={config} question={this} />
         );
+    }
+    getPointsAssigned(autoMarking: boolean): number {
+        return 1;
+    }
+
+    static deserializable(obj: any): boolean {
+        const validOptions = obj && "options" in obj && 
+                    Array.isArray(obj.options) && obj.options.length > 0 && 
+                    obj.options.every((option: any) => "label" in option && "isCorrect" in option && typeof option.label === "string" && typeof option.isCorrect === "boolean");
+        return Question.deserializable(obj) && validOptions;
+    }
+
+    static deserialize(obj: any): Question | null {
+        if(!MultipleSelectQuestion.deserializable(obj)) return null;
+
+        const question = new MultipleSelectQuestion();
+
+        try {
+            question.setPrompt(obj.prompt);
+            question.setAttachment(obj.attachment);
+            question.setExplanation(obj.explanation);
+
+            question.setAnswers([...obj.options]);
+            question.setUserInput([...obj.userInput]);
+        }catch(error) {
+            console.log('deserialization failed');
+            return null;
+        }
+        return question;
+    }
+    async getSerializableObject() {
+        const serialized = (url: string) => {
+            return {
+                type: this.type,
+                data: {
+                    prompt: this.getPrompt(),
+                    attachment: url,
+                    explanation: this.getExplanation(),
+                    options: [...this.options],
+                    userInput: [...this.userInput]
+                }
+            }
+        }
+
+        const attachment = this.getAttachment();
+        if(attachment instanceof File) {
+            try {
+                const result = await uploadFile(attachment);
+                if(result.success) {
+                    return serialized(result.url);
+                }
+            }catch(error) {
+                console.error(error)
+            }
+        }else if(typeof attachment === "string" && attachment.length > 0) {
+            return serialized(attachment);
+        }
+        return serialized("");
     }
 }

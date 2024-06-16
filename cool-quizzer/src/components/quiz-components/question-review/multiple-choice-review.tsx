@@ -1,8 +1,8 @@
 import { Card, Flex, Group, Radio, Stack, Text } from "@mantine/core";
 import { MultipleChoiceQuestion } from "../../../models/questions/MultipleChoiceQuestion";
 import { COLOR_CORRECT, COLOR_INCORRECT, getBackgroundColor, getBorderColor, getRadioIndicator } from "../../../models/ColorCode";
-import { QuestionPromptTemplate } from "../question-prompt-template";
-import { QuestionExplanationTemplate } from "../question-explanation-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
+import { QuestionExplanationTemplate } from "../templates/question-explanation-template";
 import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { QuestionReviewer } from "../../../models/QuestionReviewer";

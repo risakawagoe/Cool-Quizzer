@@ -2,8 +2,8 @@ import { Card, Checkbox, Group, RingProgress, Stack, Text } from "@mantine/core"
 import { MultipleSelectQuestion } from "../../../models/questions/MultipleSelectQuestion";
 import { useEffect, useState } from "react";
 import { getBackgroundColor, getBorderColor, getCheckboxIndicator } from "../../../models/ColorCode";
-import { QuestionPromptTemplate } from "../question-prompt-template";
-import { QuestionExplanationTemplate } from "../question-explanation-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
+import { QuestionExplanationTemplate } from "../templates/question-explanation-template";
 import { getGradingColor } from "../../../controllers/grading-color";
 import { QuestionReviewer } from "../../../models/QuestionReviewer";
 

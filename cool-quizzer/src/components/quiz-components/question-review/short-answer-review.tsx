@@ -1,7 +1,7 @@
 import { Card, Group, InputLabel, RingProgress, Text, Textarea } from "@mantine/core";
 import { ShortAnswerQuestion } from "../../../models/questions/ShortAnswerQuestion";
-import { QuestionPromptTemplate } from "../question-prompt-template";
-import { QuestionExplanationTemplate } from "../question-explanation-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
+import { QuestionExplanationTemplate } from "../templates/question-explanation-template";
 import { useEffect, useState } from "react";
 import { getGradingColor } from "../../../controllers/grading-color";
 import { QuestionReviewer } from "../../../models/QuestionReviewer";

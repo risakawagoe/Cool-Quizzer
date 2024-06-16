@@ -3,7 +3,7 @@ import { QuestionEditor } from "../../../models/QuestionEditor";
 import { Textarea } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { useEffect } from "react";
-import { QuestionPromptTemplate } from "../question-prompt-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 
 
 export const ShortAnswerTestView: QuestionEditor<ShortAnswerQuestion> = ({ question, saveQuestion }) => {

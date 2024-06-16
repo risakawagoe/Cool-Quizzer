@@ -2,7 +2,7 @@ import { Flex, Group, Radio, Stack, Text } from "@mantine/core";
 import { QuestionEditor } from "../../../models/QuestionEditor";
 import { MultipleChoiceQuestion } from "../../../models/questions/MultipleChoiceQuestion";
 import { useEffect, useState } from "react";
-import { QuestionPromptTemplate } from "../question-prompt-template";
+import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 
 
 export const MultipleChoiceTestView: QuestionEditor<MultipleChoiceQuestion> = ({ question, saveQuestion }) => {
