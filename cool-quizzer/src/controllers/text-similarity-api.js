@@ -7,9 +7,6 @@ export async function getSimilarityScore(text1, text2) {
         return 0;
     }
 
-    console.log('text1: ' + text1);
-    console.log('text2: ' + text2);
-    
     const options = {
         method: 'GET',
         headers: {
@@ -23,14 +20,11 @@ export async function getSimilarityScore(text1, text2) {
         const response = await fetch(url, options);
         if(response.ok) {
             const result = await response.json();
-            console.log('done with result: ' + result.similarity);
             return result.similarity;
         }
-        console.log('done: 0')
         return 0;
     } catch (error) {
         console.error(error);
-        console.log('done with error: 0')
         return 0;
     }
 }

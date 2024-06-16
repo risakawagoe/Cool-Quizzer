@@ -17,10 +17,6 @@ export const AttachmentUploader: FC<Props> = ({ _attachment, saveUpdate }) => {
         }
     }, [])
 
-    // useEffect(() => {
-    //     setAttachment(_attachment);
-    // }, [_attachment])
-
     function updateAttachment(file: File | null) {
         setUploadFile(file);
         setAttachment(file);

@@ -1,8 +1,8 @@
-import { FC, forwardRef, useEffect } from "react";
-import { ActionIcon, Badge, Box, Button, Card, Center, Grid, Group, Menu, Stack, Text, Title, Tooltip, TypographyStylesProvider, rem } from "@mantine/core";
+import { FC, useEffect } from "react";
+import { ActionIcon, Badge, Button, Card, Group, Menu, Stack, Text, Tooltip, rem } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
-import { Quiz, QuizOverview } from "../../models/Quiz";
-import { IconCardsFilled, IconChartDotsFilled, IconDots, IconEdit, IconHeartFilled, IconHourglassFilled, IconPlayerPlayFilled, IconSquaresFilled, IconThumbUp, IconThumbUpFilled, IconTrash, IconUserFilled } from "@tabler/icons-react";
+import { QuizOverview } from "../../models/Quiz";
+import { IconCardsFilled, IconChartDotsFilled, IconDots, IconEdit, IconHeartFilled, IconHourglassFilled, IconPlayerPlayFilled, IconTrash, IconUserFilled } from "@tabler/icons-react";
 
 interface Props {
     quizzes: Array<QuizOverview>

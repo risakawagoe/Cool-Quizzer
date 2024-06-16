@@ -1,6 +1,6 @@
 import { Accordion, ActionIcon, Box, Button, Card, Group, NumberFormatter, RingProgress, Text } from "@mantine/core";
 import { FC, useState } from "react";
-import { Question, QuestionType, getQuestionTypeLabel } from "../../../models/questions/Question";
+import { Question, getQuestionTypeLabel } from "../../../models/questions/Question";
 import { IconArrowsMaximize, IconArrowsMinimize, IconHeart, IconHeartFilled, IconLogout, IconRotateClockwise } from "@tabler/icons-react";
 import { QuizConfig } from "./player-config-screen";
 import { getGradingColor } from "../../../controllers/grading-color";

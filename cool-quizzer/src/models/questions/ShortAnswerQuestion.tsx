@@ -4,7 +4,7 @@ import { ShortAnswerTestView } from "../../components/quiz-components/question-t
 import { ShortAnswerReviewView } from "../../components/quiz-components/question-review/short-answer-review";
 import { getSimilarityScore } from "../../controllers/text-similarity-api";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
-import { uploadFile } from "../../controllers/file-upload-controller";
+import { uploadFile } from "../../controllers/file-controller";
 
 
 export class ShortAnswerQuestion extends Question {

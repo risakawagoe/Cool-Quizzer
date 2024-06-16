@@ -3,7 +3,7 @@ import { MultipleChoiceEditView } from "../../components/quiz-components/questio
 import { MultipleChoiceTestView } from "../../components/quiz-components/question-test/multiple-choice-test";
 import { MultipleChoiceReviewView } from "../../components/quiz-components/question-review/multiple-choice-review";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
-import { uploadFile } from "../../controllers/file-upload-controller";
+import { uploadFile } from "../../controllers/file-controller";
 
 export class MultipleChoiceQuestion extends Question {
     private options: Array<string> = [];

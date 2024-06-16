@@ -10,12 +10,10 @@ import { useDisclosure, useInputState } from "@mantine/hooks";
 import { NoAnswerQuestion } from "../../models/questions/NoAnswerQuestion";
 import { NewQuestionEditView } from "./new-question-edit-view";
 import { Question } from "../../models/questions/Question";
-// import { QuizPlayer } from "./quiz-player";
 import { createQuiz, getQuiz, updateQuiz } from "../../controllers/quiz-controller";
 
 interface Props {
     id: string | undefined
-    // saveQuiz: (quiz: Quiz) => void
     closeEditor: () => void
 }
 
@@ -144,7 +142,6 @@ export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
             const data = result.data;
             if(result.success && data) {
                 setQuiz(data);
-                // questionsHandlers.setState(data.getQuestions());
             }else {
                 alert('Sorry.. Something went wrong, please try again later.');
                 close();

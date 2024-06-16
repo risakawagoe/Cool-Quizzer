@@ -2,7 +2,7 @@ import { NoAnswerEditView } from "../../components/quiz-components/question-edit
 import { NoAnswerReviewView } from "../../components/quiz-components/question-review/no-answer-review";
 import { NoAnswerTestView } from "../../components/quiz-components/question-test/no-answer-test";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
-import { uploadFile } from "../../controllers/file-upload-controller";
+import { uploadFile } from "../../controllers/file-controller";
 import { Question, QuestionType } from "./Question";
 
 

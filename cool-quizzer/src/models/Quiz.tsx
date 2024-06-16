@@ -1,4 +1,3 @@
-import { FirestoreDataConverter } from "firebase/firestore";
 import { Question, QuestionType } from "./questions/Question";
 import { MultipleChoiceQuestion } from "./questions/MultipleChoiceQuestion";
 import { MultipleSelectQuestion } from "./questions/MultipleSelectQuestion";

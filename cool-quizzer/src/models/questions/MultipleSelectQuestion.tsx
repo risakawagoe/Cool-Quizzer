@@ -3,7 +3,7 @@ import { MultipleSelectEditView } from "../../components/quiz-components/questio
 import { MultipleSelectTestView } from "../../components/quiz-components/question-test/multiple-select-test";
 import { MultipleSelectReviewView } from "../../components/quiz-components/question-review/multiple-select-review";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
-import { uploadFile } from "../../controllers/file-upload-controller";
+import { uploadFile } from "../../controllers/file-controller";
 
 export interface Option {
     label: string, 
