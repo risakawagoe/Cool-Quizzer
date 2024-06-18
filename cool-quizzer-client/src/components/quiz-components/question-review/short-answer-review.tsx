@@ -3,7 +3,7 @@ import { ShortAnswerQuestion } from "../../../models/questions/ShortAnswerQuesti
 import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 import { QuestionExplanationTemplate } from "../templates/question-explanation-template";
 import { useEffect, useState } from "react";
-import { getGradingColor } from "../../../controllers/grading-color";
+import { getGradingColor } from "../../../utils/grading-color";
 import { QuestionReviewer } from "../../../models/QuestionReviewer";
 
 

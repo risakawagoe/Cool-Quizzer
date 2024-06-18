@@ -1,6 +1,6 @@
 import { FC, useState } from "react"
 import { Button, Card, Center, Container, Group, NumberFormatter, RingProgress, Switch, Text } from "@mantine/core"
-import { getGradingColor } from "../../../controllers/grading-color"
+import { getGradingColor } from "../../../utils/grading-color"
 
 
 export interface QuizConfig {

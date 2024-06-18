@@ -137,6 +137,15 @@ export class MultipleChoiceQuestion extends Question {
         const attachment = this.getAttachment();
         if(attachment instanceof File) {
             try {
+                // const formData = new FormData();
+                // formData.append('file', attachment);
+
+                // const response = await fetch("https://file-service-cdyocxqala-uc.a.run.app/api/files", {
+                //     method: "POST",
+                //     body: formData
+                // });
+
+                // const result = await response.json();
                 const result = await uploadFile(attachment);
                 if(result.success) {
                     return serialized(result.url);

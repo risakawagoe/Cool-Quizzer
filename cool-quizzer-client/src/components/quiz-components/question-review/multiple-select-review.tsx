@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getBackgroundColor, getBorderColor, getCheckboxIndicator } from "../../../models/ColorCode";
 import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 import { QuestionExplanationTemplate } from "../templates/question-explanation-template";
-import { getGradingColor } from "../../../controllers/grading-color";
+import { getGradingColor } from "../../../utils/grading-color";
 import { QuestionReviewer } from "../../../models/QuestionReviewer";
 
 
