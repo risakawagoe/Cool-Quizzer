@@ -1,8 +1,8 @@
-const express = require('express');
 const dotenv = require('dotenv');
+dotenv.config();
+const express = require('express');
 const { createQuiz, getQuiz, getAllQuizzes, updateQuiz, updateQuizStats, deleteQuiz, markShortAnswerQuestion } = require('./quiz-controller');
 
-dotenv.config();
 const app = express();
 const port = 3000;
 

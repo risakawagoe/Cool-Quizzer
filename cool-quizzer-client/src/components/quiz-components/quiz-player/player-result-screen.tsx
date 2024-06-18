@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { Question, getQuestionTypeLabel } from "../../../models/questions/Question";
 import { IconArrowsMaximize, IconArrowsMinimize, IconHeart, IconHeartFilled, IconLogout, IconRotateClockwise } from "@tabler/icons-react";
 import { QuizConfig } from "./player-config-screen";
-import { getGradingColor } from "../../../controllers/grading-color";
+import { getGradingColor } from "../../../utils/grading-color";
 
 interface Props {
     config: QuizConfig
