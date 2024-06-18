@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const { createQuiz, getQuiz, getAllQuizzes, updateQuiz, updateQuizStats, deleteQuiz } = require('./quiz-controller');
+const { createQuiz, getQuiz, getAllQuizzes, updateQuiz, updateQuizStats, deleteQuiz, markShortAnswerQuestion } = require('./quiz-controller');
 
 dotenv.config();
 const app = express();
@@ -17,6 +17,7 @@ app.get('/api/hello', (req, res) => {
 app.post('/api/quiz', createQuiz);
 app.get("/api/quiz/:id", getQuiz);
 app.get('/api/quiz', getAllQuizzes);
+app.get('/api/marking/shortanswer', markShortAnswerQuestion);
 app.put('/api/quiz/:id', updateQuiz);
 app.put('/api/stats/:id', updateQuizStats);
 app.delete('/api/quiz/:id', deleteQuiz);
