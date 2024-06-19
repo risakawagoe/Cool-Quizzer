@@ -103,7 +103,7 @@ export const PlayerConfigScreen: FC<Props> = ({ config, meta, start }) => {
                 {controlSection}
             </Card>
             <Center>
-                <Button onClick={() => start({ shuffle, autoMarking, instantMarking })} variant="gradient" gradient={{ from: 'blue', to: 'cyan', deg: 90 }} radius="xl" size="md" mt={32} mb={20}>START</Button>
+                <Button onClick={() => start({ shuffle, autoMarking, instantMarking })} variant="gradient" gradient={{ from: 'cyan', to: 'blue', deg: 120 }} radius="xl" size="md" mt={32} mb={20}>START</Button>
             </Center>
         </>
     )

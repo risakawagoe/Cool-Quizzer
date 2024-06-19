@@ -13,7 +13,6 @@ export const ShortAnswerReviewView: QuestionReviewer<ShortAnswerQuestion> = ({ c
     useEffect(() => {
         async function init() {
             const score = await question.getScore(config.autoMarking);
-            console.log(score)
             setPercentage(score * 100);
         }
         init();

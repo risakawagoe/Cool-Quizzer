@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { ActionIcon, Badge, Button, Card, Group, Menu, Stack, Text, Tooltip, rem } from "@mantine/core";
+import { ActionIcon, Badge, Button, Card, Group, Menu, SimpleGrid, Stack, Text, Tooltip, rem } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { QuizOverview } from "../../models/Quiz";
 import { IconCardsFilled, IconChartDotsFilled, IconDots, IconEdit, IconHeartFilled, IconHourglassFilled, IconPlayerPlayFilled, IconTrash, IconUserFilled } from "@tabler/icons-react";
@@ -21,7 +21,7 @@ export const QuizList: FC<Props> = ({ quizzes, playQuiz, editQuiz, deleteQuiz })
 
     const card = (quiz: QuizOverview, index: number) => {
         return(
-            <Card key={index} withBorder shadow="sm" radius="md" miw={320}>
+            <Card key={index} withBorder shadow="sm" radius="md">
                 <Card.Section p="md" withBorder>
                     <Group align="flex-start">
                         <Text flex={1} fw={500} lineClamp={3}>{quiz.title}</Text>
@@ -99,8 +99,13 @@ export const QuizList: FC<Props> = ({ quizzes, playQuiz, editQuiz, deleteQuiz })
     }
 
     return(
-        <Group grow align="flex-start">
+        <SimpleGrid 
+            type="container"
+            cols={{ base: 1, '620px': 2, '960px': 4, '1200px': 5 }}
+            spacing="sm"
+            verticalSpacing="sm"
+        >
             {list.map((quiz, index) => card(quiz, index))}
-        </Group>
+        </SimpleGrid>
     );
 }

@@ -216,7 +216,7 @@ export const QuizPlayer: FC<Props> = ({ id, close }) => {
                 visible={loading}
                 zIndex={1000}
                 overlayProps={{ radius: 'sm', blur: 2 }}
-                loaderProps={{ color: 'pink', type: 'bars' }}
+                loaderProps={{ color: 'cyan', type: 'bars' }}
             />
             {quiz &&
             <Box maw={920} ml="auto" mr="auto">

@@ -3,7 +3,6 @@ import { MultipleChoiceEditView } from "../../components/quiz-components/questio
 import { MultipleChoiceTestView } from "../../components/quiz-components/question-test/multiple-choice-test";
 import { MultipleChoiceReviewView } from "../../components/quiz-components/question-review/multiple-choice-review";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
-import { uploadFile } from "../../controllers/file-controller";
 
 export class MultipleChoiceQuestion extends Question {
     private options: Array<string> = [];
@@ -137,18 +136,19 @@ export class MultipleChoiceQuestion extends Question {
         const attachment = this.getAttachment();
         if(attachment instanceof File) {
             try {
-                // const formData = new FormData();
-                // formData.append('file', attachment);
+                const formData = new FormData();
+                formData.append('file', attachment);
 
-                // const response = await fetch("https://file-service-cdyocxqala-uc.a.run.app/api/files", {
-                //     method: "POST",
-                //     body: formData
-                // });
+                const response = await fetch(`${process.env.REACT_APP_FILE_SERVICE_ENDPOINT}/api/file`, {
+                    method: "POST",
+                    body: formData
+                });
 
-                // const result = await response.json();
-                const result = await uploadFile(attachment);
-                if(result.success) {
-                    return serialized(result.url);
+                if(response.ok) {
+                    const result = await response.json();
+                    if(result.success) {
+                        return serialized(result.url);
+                    }
                 }
             }catch(error) {
                 console.error(error)

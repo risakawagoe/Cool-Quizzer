@@ -1,28 +1,33 @@
-import { Button, Container, Group, Image, Modal, ScrollArea } from '@mantine/core';
+import { Button, Center, Container, Flex, Group, Image, Loader, Modal, ScrollArea, Text } from '@mantine/core';
 import './App.css';
 import { QuizEditor } from './components/quiz-components/quiz-editor';
 import { QuizList } from './components/quiz-components/quiz-list';
 import { useEffect, useState } from 'react';
 import { useDisclosure, useListState } from '@mantine/hooks';
 import { QuizOverview } from './models/Quiz';
-import { deleteQuiz, getAllQuizzes } from './controllers/quiz-controller';
 import { QuizPlayer } from './components/quiz-components/quiz-player';
 import Logo from "./logo.png";
+import { deleteQuiz, getAllQuizzes } from './controllers/quiz-controller';
 
 function App() {
     const [opened, { open, close }] = useDisclosure(false);
     const [id, setId] = useState<string | undefined>(undefined);
     const [quizzes, handlers] = useListState<QuizOverview>([]);
     const [playerModalActive, setPlayerModalActive] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(()  => {
         fetchQuizzes();
-    }, [])
+    }, []);
 
     async function fetchQuizzes() {
+        setLoading(true);
         const result = await getAllQuizzes();
+        setLoading(false);
         if(result.success) {
             handlers.setState(result.data);
+        }else {
+            alert('Sorry.. something went wrong, we are currently unable to fetch quiz data.');
         }
     }
 
@@ -38,22 +43,19 @@ function App() {
     }
 
     function playQuiz(id: string) {
-        // console.log('PLAY: ' + id);
         setId(id);
         setPlayerModalActive(true);
     }
     function editQuiz(id: string) {
-        // console.log('EDIT: ' + id);
         setId(id);
         open();
     }
     async function deleteQuizById(id: string) {
-        // console.log('DELETE: ' + id);
         const deleted = await deleteQuiz(id);
         if(deleted) {
             fetchQuizzes();
         }else {
-            alert('Sorry.. Something went wrong, Please try again later.');
+            alert('Sorry.. there is a connection issue with the server, we are currently unable to fetch quiz data.');
         }
     }
 
@@ -77,7 +79,14 @@ function App() {
                 <Group justify='flex-end' mt={32} mb={24}>
                     <Button variant='subtle' onClick={open}>Add new quiz</Button>
                 </Group>
-                <QuizList quizzes={quizzes} playQuiz={playQuiz} editQuiz={editQuiz} deleteQuiz={deleteQuizById} />
+                {loading ?
+                <Center h={320}>
+                    <Flex direction="column" justify="center" align="center">
+                        <Text size="xs" c="cyan">loading quiz data</Text>
+                        <Loader color="cyan" type="dots" />
+                    </Flex>
+                </Center>:
+                <QuizList quizzes={quizzes} playQuiz={playQuiz} editQuiz={editQuiz} deleteQuiz={deleteQuizById} />}
             </Container>
         </>
     );

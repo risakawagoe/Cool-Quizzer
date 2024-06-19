@@ -14,9 +14,7 @@ export const PlayerRunningScreen: FC<Props> = ({ config, question, index, saveQu
     const [currentQuestion, setCurrentQuestion] = useState(question);
     useEffect(() => {
         setCurrentQuestion(question)
-        console.log(question)
-        console.log(currentQuestion)
-    }, [question])
+    }, [question]);
 
     return (
         <Card withBorder mb={20}>

@@ -2,9 +2,9 @@ import { Question, QuestionType } from "./Question";
 import { ShortAnswerEditView } from "../../components/quiz-components/question-edit/short-answer-edit";
 import { ShortAnswerTestView } from "../../components/quiz-components/question-test/short-answer-test";
 import { ShortAnswerReviewView } from "../../components/quiz-components/question-review/short-answer-review";
-import { getSimilarityScore } from "../../controllers/text-similarity-api";
 import { QuizConfig } from "../../components/quiz-components/quiz-player/player-config-screen";
 import { uploadFile } from "../../controllers/file-controller";
+import { getSimilarityScore } from "../../controllers/quiz-controller";
 
 
 export class ShortAnswerQuestion extends Question {
