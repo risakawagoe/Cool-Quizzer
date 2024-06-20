@@ -59,10 +59,15 @@ function App() {
         }
     }
 
+    const shadowStyle = (verticalLen: number) => {
+        // 3 or -3 would be a good number
+        return { boxShadow: `0px ${verticalLen}px 10px -1px rgba(0,0,0,0.4)` };
+    }
+
     return (
         <>
             <Group p={32} bg="black">
-                <Image src={Logo} alt="Cool Quizzer Logo" w={160} />
+                <Image src={Logo} alt="Cool Quizzer Logo" w={120} />
             </Group>
             <Modal opened={opened} onClose={() => { close(); setId(undefined); }} fullScreen scrollAreaComponent={ScrollArea.Autosize}>
                 <QuizEditor id={id} closeEditor={closeEditor} />
@@ -75,7 +80,7 @@ function App() {
                 transitionProps={{ transition: 'fade', duration: 200 }}>
                     {id && <QuizPlayer id={id} close={closePlayer} />}
             </Modal>
-            <Container>
+            <Container pb={40}>
                 <Group justify='flex-end' mt={32} mb={24}>
                     <Button variant='subtle' onClick={open}>Add new quiz</Button>
                 </Group>
@@ -88,6 +93,9 @@ function App() {
                 </Center>:
                 <QuizList quizzes={quizzes} playQuiz={playQuiz} editQuiz={editQuiz} deleteQuiz={deleteQuizById} />}
             </Container>
+            <Group p={32} bg="black" justify='center'>
+                <Text c="dimmed" size="xs">&copy; Cool Quizzer 2024</Text>
+            </Group>
         </>
     );
 }

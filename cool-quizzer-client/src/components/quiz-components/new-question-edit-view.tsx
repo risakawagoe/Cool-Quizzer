@@ -61,6 +61,7 @@ export const NewQuestionEditView: FC<Props> = ({ addQuestion }) => {
                 value={type} 
                 allowDeselect={false}
                 onChange={setType}
+                size="md"
                 mb={12} />
             {question === null ? <Text>Select a question type.</Text> : question.getEditView(addQuestion)}
         </Container>

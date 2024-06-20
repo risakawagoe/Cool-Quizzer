@@ -6,29 +6,19 @@ import { QuestionPromptTemplate } from "../templates/question-prompt-template";
 
 
 export const MultipleSelectTestView: QuestionEditor<MultipleSelectQuestion> = ({ question, saveQuestion }) => {
-    const [userInput, setUserInput] = useState<string[]>(() => {
-        const tmp: string[] = [];
-        question.getUserInput().forEach((selected, index) => {
-            if(selected) {
-                tmp.push(index.toString());
-            }
-        })
-        return tmp;
-    });
+    const [userInput, setUserInput] = useState<string[]>([]);
 
     useEffect(() => {
-        const tmp: string[] = [];
-        question.getUserInput().forEach((selected, index) => {
-            if(selected) {
-                tmp.push(index.toString());
-            }
-        })
-        setUserInput([...tmp]);
-    }, [question])
+        if(inputHasChanged(question)) {
+            setUserInput(getUserInput(question));
+        }
+    }, [question]);
 
     useEffect(() => {
-        saveUserInput();
-    }, [userInput])
+        if(inputHasChanged(question)) {
+            saveUserInput();
+        }
+    }, [userInput]);
 
     const cards = question.getOptions().map((option, index) => (
         <Checkbox.Card value={index.toString()} key={index} p={12}>
@@ -38,7 +28,22 @@ export const MultipleSelectTestView: QuestionEditor<MultipleSelectQuestion> = ({
             </Group>
         </Checkbox.Card>
     ));
+    function getUserInput(question: MultipleSelectQuestion): string[] {
+        const tmp: string[] = [];
+        question.getUserInput().forEach((selected, index) => {
+            if(selected) {
+                tmp.push(index.toString());
+            }
+        });
+        tmp.sort();
+        return tmp;
+    }
 
+    function inputHasChanged(question: MultipleSelectQuestion): boolean {
+        const inputA = getUserInput(question);
+        const inputB = [...userInput].sort();
+        return JSON.stringify(inputA) !== JSON.stringify(inputB);
+    }
 
     function saveUserInput() {
         const updatedQuestion: MultipleSelectQuestion = question.cloneQuestion();

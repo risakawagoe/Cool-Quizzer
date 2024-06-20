@@ -36,6 +36,7 @@ export const AttachmentUploader: FC<Props> = ({ _attachment, saveUpdate }) => {
             accept="image/png,image/jpeg" 
             label="Attachment" 
             placeholder="Select an image file"
+            size="md"
             mb={12}
             rightSection={<IconPhoto style={{ width: '65%', height: '65%' }} stroke={1.4} />} />
         {(attachment) &&

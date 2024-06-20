@@ -90,6 +90,7 @@ export const MultipleChoiceEditView: QuestionEditor<MultipleChoiceQuestion> = ({
                             </ActionIcon>}
                 label="New option"
                 placeholder="Type in a new option."
+                size="md"
                 mb={12}
             />
             <FieldRichTextEditor field="Explanation" required={false} content={explanation} editable={true} updateContent={setExplanation} />

@@ -32,6 +32,7 @@ export const ShortAnswerEditView: QuestionEditor<ShortAnswerQuestion> = ({ quest
                 onChange={setCorrectAnswer}
                 required
                 autosize
+                size="md"
                 mb={12}
                 />
             <FieldRichTextEditor field="Explanation" required={false} content={explanation} editable={true} updateContent={setExplanation} />

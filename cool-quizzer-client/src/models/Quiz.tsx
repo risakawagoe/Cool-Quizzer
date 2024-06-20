@@ -60,7 +60,8 @@ export class Quiz {
         return this.questions;
     }
     public addQuestion(question: Question): void {
-        this.questions.push(question);
+        this.questions = [...this.questions, question];
+        // this.questions.push(question);
     }
     public removeQuestion(index: number): void {
         this.questions.splice(index, 1);
@@ -69,6 +70,9 @@ export class Quiz {
         if(index >= 0 && index < this.questions.length) {
             this.questions.splice(index, 1, question);
         }
+    }
+    public setQuestions(questions: Array<Question>): void {
+        this.questions = [...questions];
     }
     public getStats(): QuizStats {
         return this.stats;

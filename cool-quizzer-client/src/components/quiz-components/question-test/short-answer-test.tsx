@@ -30,6 +30,7 @@ export const ShortAnswerTestView: QuestionEditor<ShortAnswerQuestion> = ({ quest
                 label="Your Answer"
                 value={userInput}
                 autosize
+                size="md"
                 onChange={setUserInput}
             />
         </div>

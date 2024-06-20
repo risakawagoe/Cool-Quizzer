@@ -9,12 +9,18 @@ export const MultipleChoiceTestView: QuestionEditor<MultipleChoiceQuestion> = ({
     const [userInput, setUserInput] = useState<string>(question.getUserInput().toString());
 
     useEffect(() => {
-        setUserInput(question.getUserInput().toString());
-    }, [question])
-
+        const value = question.getUserInput().toString();
+        if(userInput !== value) {
+            setUserInput(value);
+        }
+    }, [question]);
+        
     useEffect(() => {
-        saveUserInput();
-    }, [userInput])
+        const value = question.getUserInput().toString();
+        if(userInput !== value) {
+            saveUserInput();
+        }
+    }, [userInput]);
 
     const cards = question.getOptions().map((option, index) => (
         <Flex key={index} gap={8} align="center">
