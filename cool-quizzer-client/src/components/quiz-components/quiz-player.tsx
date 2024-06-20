@@ -79,7 +79,9 @@ export const QuizPlayer: FC<Props> = ({ id, close }) => {
     async function markCurrentQuestion() {
         const current = questions.at(index);
         if(current !== undefined) {
+            setLoading(true);
             await current!.mark(config.autoMarking);
+            setLoading(false);
             saveQuestion(current);
         }
     }
