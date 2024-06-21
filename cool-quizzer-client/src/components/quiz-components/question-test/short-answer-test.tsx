@@ -10,12 +10,16 @@ export const ShortAnswerTestView: QuestionEditor<ShortAnswerQuestion> = ({ quest
     const [userInput, setUserInput] = useInputState(question.getUserInput());
 
     useEffect(() => {
-        setUserInput(question.getUserInput());
-    }, [question])
+        if(userInput !== question.getUserInput()) {
+            setUserInput(question.getUserInput());
+        }
+    }, [question]);
 
     useEffect(() => {
-        saveUserInput();
-    }, [userInput])
+        if(userInput !== question.getUserInput()) {
+            saveUserInput();
+        }
+    }, [userInput]);
 
     function saveUserInput() {
         const updatedQuestion: ShortAnswerQuestion = question.cloneQuestion();

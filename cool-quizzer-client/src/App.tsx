@@ -15,10 +15,13 @@ function App() {
     const [quizzes, handlers] = useListState<QuizOverview>([]);
     const [playerModalActive, setPlayerModalActive] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [changed, setChanged] = useState(true);
 
     useEffect(()  => {
-        fetchQuizzes();
-    }, []);
+        if(changed) {
+            fetchQuizzes();
+        }
+    }, [changed]);
 
     async function fetchQuizzes() {
         setLoading(true);
@@ -29,17 +32,16 @@ function App() {
         }else {
             alert('Sorry.. something went wrong, we are currently unable to fetch quiz data.');
         }
+        setChanged(false);
     }
 
     function closeEditor() {
         close();
         setId(undefined);
-        fetchQuizzes();
     }
     function closePlayer() {
         setPlayerModalActive(false);
         setId(undefined);
-        fetchQuizzes();
     }
 
     function playQuiz(id: string) {
@@ -53,7 +55,7 @@ function App() {
     async function deleteQuizById(id: string) {
         const deleted = await deleteQuiz(id);
         if(deleted) {
-            fetchQuizzes();
+            setChanged(true);
         }else {
             alert('Sorry.. there is a connection issue with the server, we are currently unable to fetch quiz data.');
         }
@@ -66,11 +68,8 @@ function App() {
 
     return (
         <>
-            <Group p={32} bg="black">
-                <Image src={Logo} alt="Cool Quizzer Logo" w={120} />
-            </Group>
-            <Modal opened={opened} onClose={() => { close(); setId(undefined); }} fullScreen scrollAreaComponent={ScrollArea.Autosize}>
-                <QuizEditor id={id} closeEditor={closeEditor} />
+            <Modal opened={opened} onClose={closeEditor} fullScreen scrollAreaComponent={ScrollArea.Autosize}>
+                <QuizEditor id={id} closeEditor={closeEditor} changed={() => setChanged(true)} />
             </Modal>
             <Modal
                 opened={playerModalActive}
@@ -78,24 +77,29 @@ function App() {
                 fullScreen
                 radius={0}
                 transitionProps={{ transition: 'fade', duration: 200 }}>
-                    {id && <QuizPlayer id={id} close={closePlayer} />}
+                    {id && <QuizPlayer id={id} closePlayer={closePlayer} changed={() => setChanged(true)} />}
             </Modal>
-            <Container pb={40}>
-                <Group justify='flex-end' mt={32} mb={24}>
-                    <Button variant='subtle' onClick={open}>Add new quiz</Button>
+            <Flex direction="column" mih="100vh">
+                <Group p={32} bg="black">
+                    <Image src={Logo} alt="Cool Quizzer Logo" w={120} />
                 </Group>
-                {loading ?
-                <Center h={320}>
-                    <Flex direction="column" justify="center" align="center">
-                        <Text size="xs" c="cyan">loading quiz data</Text>
-                        <Loader color="cyan" type="dots" />
-                    </Flex>
-                </Center>:
-                <QuizList quizzes={quizzes} playQuiz={playQuiz} editQuiz={editQuiz} deleteQuiz={deleteQuizById} />}
-            </Container>
-            <Group p={32} bg="black" justify='center'>
-                <Text c="dimmed" size="xs">&copy; Cool Quizzer 2024</Text>
-            </Group>
+                <Container pb={40} flex={1} maw={980} w="100%">
+                    <Group justify='flex-end' mt={32} mb={24}>
+                        <Button variant='subtle' onClick={open}>Add new quiz</Button>
+                    </Group>
+                    {loading ?
+                    <Center h={320}>
+                        <Flex direction="column" justify="center" align="center">
+                            <Text size="xs" c="cyan">loading quiz data</Text>
+                            <Loader color="cyan" type="dots" />
+                        </Flex>
+                    </Center>:
+                    <QuizList quizzes={quizzes} playQuiz={playQuiz} editQuiz={editQuiz} deleteQuiz={deleteQuizById} />}
+                </Container>
+                <Group p={32} bg="black" justify='center'>
+                    <Text c="dimmed" size="xs">&copy; Cool Quizzer 2024</Text>
+                </Group>
+            </Flex>
         </>
     );
 }

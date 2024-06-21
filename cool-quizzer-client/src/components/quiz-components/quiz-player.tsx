@@ -10,10 +10,11 @@ import { getQuiz, updateQuizStats } from "../../controllers/quiz-controller";
 
 interface Props {
     id: string
-    close: () => void
+    closePlayer: () => void
+    changed: () => void
 }
 
-export const QuizPlayer: FC<Props> = ({ id, close }) => {
+export const QuizPlayer: FC<Props> = ({ id, closePlayer, changed }) => {
     const enum Screen {
         CONFIG, RUNNING, RESULT
     }
@@ -45,7 +46,7 @@ export const QuizPlayer: FC<Props> = ({ id, close }) => {
             questionsHandlers.setState(data.getQuestions());
         }else {
             alert('Sorry.. Something went wrong, please try again later.');
-            close();
+            closePlayer();
         }
         setLoading(false);
     }
@@ -131,7 +132,7 @@ export const QuizPlayer: FC<Props> = ({ id, close }) => {
     }
     function exitQuiz() {
         resetQuestionsState();
-        close();
+        closePlayer();
     }
     function getMaxScore() {
         return questions
@@ -208,6 +209,7 @@ export const QuizPlayer: FC<Props> = ({ id, close }) => {
             const tmp = quiz.clone();
             tmp.setStats(stats);
             setQuiz(tmp);
+            changed();
         }
     }
 

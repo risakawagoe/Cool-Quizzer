@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Quiz } from "../../models/Quiz";
+import { Quiz, QuizStats } from "../../models/Quiz";
 import { Button, Container, Group, LoadingOverlay, Modal, ScrollArea, TextInput, Textarea, Title } from "@mantine/core";
 import { IconSquarePlus } from "@tabler/icons-react";
 import { QuestionsList } from "./questions-list";
@@ -11,9 +11,10 @@ import { createQuiz, getQuiz, updateQuiz } from "../../controllers/quiz-controll
 interface Props {
     id: string | undefined
     closeEditor: () => void
+    changed: () => void
 }
 
-export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
+export const QuizEditor: FC<Props> = ({ id, closeEditor, changed }) => {
     const [opened, { open, close }] = useDisclosure(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalElement, setModalElement] = useState(<></>);
@@ -22,6 +23,7 @@ export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
     const [description, setDescription] = useInputState('');
     const [questions, questionsHandlers] = useListState<Question>([]);
     const [loading, setLoading] = useState(false);
+    const [stats, setStats] = useState<QuizStats>();
 
     useEffect(() => {
         fetchQuiz();
@@ -29,7 +31,7 @@ export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
 
     
     async function fetchQuiz() {
-        if(id) {
+        if(id !== undefined) {
             setLoading(true);
             const result = await getQuiz(id);
             const quiz = result.data;
@@ -37,6 +39,7 @@ export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
                 setTitle(quiz.getTitle());
                 setDescription(quiz.getDescription());
                 questionsHandlers.setState([...quiz.getQuestions()]);
+                setStats(quiz.getStats());
             }else {
                 alert('Sorry.. Something went wrong, please try again later.');
                 close();
@@ -70,15 +73,19 @@ export const QuizEditor: FC<Props> = ({ id, closeEditor }) => {
     }
 
     async function saveQuiz() {
-        setLoading(true);
         const quiz = new Quiz();
         quiz.setTitle(title);
         quiz.setDescription(description);
         quiz.setQuestions(questions);
-
+        if(stats) {
+            quiz.setStats(stats);
+        }
+        
+        setLoading(true);
         const success = id ? await updateQuiz(id, quiz) : await createQuiz(quiz);
         setLoading(false);
         if(success) {
+            changed();
             closeEditor();
         }else {
             alert('Sorry.. Something went wrong, Please try again later.');
