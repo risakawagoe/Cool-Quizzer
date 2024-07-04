@@ -69,7 +69,10 @@ npm start
 ```
 
 ### Containerization with Docker
->Latest stable version [file-service:v1.0.1] and [quiz-service:v1.1.3]
+> Latest stable version
+>
+> * FILE SERVICE [file-service:v1.0.3]
+> * QUIZ SERVICE [quiz-service:v1.1.3]
 
 Run the following commands at the directory of **/cool-quizzer-server/file-service** and **/cool-quizzer-server/quiz-service**.
 ```

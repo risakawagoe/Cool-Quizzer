@@ -1,6 +1,7 @@
 const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const { storage } = require("./firebase");
-const { v4 } = require("uuid");
+const { generateUniqueFilename } = require("./util");
+// const { v4 } = require("uuid");
 
 const FILE_UPLOADS_DIR = "uploads";
 
@@ -10,7 +11,8 @@ const uploadFile = async (req, res) => {
         return res.status(400).json({ success: false, message: "Request did not contain any files." })
     }
 
-    const storageRef = ref(storage, `${FILE_UPLOADS_DIR}/${file.originalname + v4()}`);
+    const storageRef = ref(storage, `${FILE_UPLOADS_DIR}/${generateUniqueFilename(file.originalname)}`);
+    // const storageRef = ref(storage, `${FILE_UPLOADS_DIR}/${file.originalname + v4()}`);
     try {
         const snapshot = await uploadBytes(storageRef, file.buffer, { contentType: file.mimetype });
         const fileURL = await getDownloadURL(snapshot.ref);
@@ -28,7 +30,8 @@ const uploadFiles = async (req, res) => {
 
     const items = [];
     files.forEach(file => items.push({
-        storageRef: ref(storage, `${FILE_UPLOADS_DIR}/${file.originalname + v4()}`),
+        storageRef: ref(storage, `${FILE_UPLOADS_DIR}/${generateUniqueFilename(file.originalname)}`),
+        // storageRef: ref(storage, `${FILE_UPLOADS_DIR}/${file.originalname + v4()}`),
         file: file.buffer,
         contentType: file.mimetype
     }));
